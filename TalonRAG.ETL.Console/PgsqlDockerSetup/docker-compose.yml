@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: ankane/pgvector   # This image comes with PGVector pre-installed
+    container_name: talonrag_postgres_pgvector
+    environment:
+      POSTGRES_USER: talonragsvc            # Set your PostgreSQL user
+      POSTGRES_PASSWORD: talonrag123!@#     # Set your PostgreSQL password
+      POSTGRES_DB: talonrag                 # Name of the new database
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./Scripts/:/docker-entrypoint-initdb.d/
+
+volumes:
+  pgdata:

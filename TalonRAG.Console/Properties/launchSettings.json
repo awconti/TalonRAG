@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TalonRAG.Console": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
