@@ -22,6 +22,14 @@ namespace TalonRAG.Common.Persistence.Repository
 		Task InsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings);
 
 		/// <summary>
+		/// Bulk inserts a list collection of <see cref="ArticleEmbedding"/>.
+		/// </summary>
+		/// <param name="embeddings">
+		/// List collection of <see cref="ArticleEmbedding"/>.
+		/// </param>
+		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings);
+
+		/// <summary>
 		/// Retrieves similar embeddings.
 		/// </summary>
 		/// <param name="embedding">

@@ -39,7 +39,7 @@ namespace TalonRAG.Common.Persistence.Repository
 				if (embedding == null || embedding.Embedding == null || embedding.Content == null) { continue; }
 
 				var sql =
-					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content)";
+					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content);";
 				
 				using var command = new NpgsqlCommand(sql, connection);
 				var vector = new Vector(embedding.Embedding);
@@ -48,6 +48,25 @@ namespace TalonRAG.Common.Persistence.Repository
 
 				await command.ExecuteNonQueryAsync();
 			}
+		}
+
+		/// <inheritdoc cref="IEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbedding})" />
+		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings)
+		{
+			using var connection = await CreateConnection();
+
+			var command =
+				"COPY article_embeddings (article_embedding, article_content) FROM STDIN (FORMAT BINARY)";
+
+			using var writer = await connection.BeginBinaryImportAsync(command);
+			foreach(var embedding in embeddings)
+			{
+				writer.StartRow();
+				writer.Write(new Vector(embedding.Embedding));
+				writer.Write(embedding.Content);
+			}
+
+			writer.Complete();
 		}
 
 		/// <inheritdoc cref="IEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />

@@ -53,6 +53,6 @@ internal class ETLConsoleService(
 	private async Task BulkInsertEmbeddings(IList<ArticleEmbedding> articleEmbeddings)
 	{
 		await _repository.DeleteAllEmbeddingsAsync();
-		await _repository.InsertEmbeddingsAsync(articleEmbeddings);
+		await _repository.BulkInsertEmbeddingsAsync(articleEmbeddings);
 	}
 }
