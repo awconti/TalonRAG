@@ -2,18 +2,18 @@
 using Npgsql;
 using Pgvector;
 using TalonRAG.Common.Configuration;
+using TalonRAG.Common.Domain.DTO;
 using TalonRAG.Common.Extensions;
-using TalonRAG.Common.Persistence.DTO;
 
 namespace TalonRAG.Common.Persistence.Repository
 {
-	/// <summary>
-	/// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
-	/// </summary>
-	/// <param name="configurationSettings">
-	/// <see cref="DatabaseConfigurationSettings"/>.
-	/// </param>
-	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IEmbeddingRepository
+    /// <summary>
+    /// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
+    /// </summary>
+    /// <param name="configurationSettings">
+    /// <see cref="DatabaseConfigurationSettings"/>.
+    /// </param>
+    public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IEmbeddingRepository
 	{
 		private readonly DatabaseConfigurationSettings _configurationSettings = configurationSettings.Value;
 

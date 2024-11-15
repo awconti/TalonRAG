@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
+using TalonRAG.Common.Domain.DTO;
 using TalonRAG.Common.Embedding;
-using TalonRAG.Common.Persistence.DTO;
 using TalonRAG.Common.Persistence.Repository;
 
 internal class ETLConsoleService(

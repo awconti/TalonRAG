@@ -3,6 +3,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
 using TalonRAG.Common.Configuration;
+using TalonRAG.Common.Domain.DTO;
 using TalonRAG.Common.Extensions;
 
 namespace TalonRAG.Common.ChatCompletion
@@ -18,7 +19,7 @@ namespace TalonRAG.Common.ChatCompletion
 		private readonly ChatCompletorConfigurationSettings _configurationSettings = configurationSettings.Value;
 
 		/// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(string)" />
-		public async Task<ChatMessageContent> GetChatMessageContentAsync(string prompt)
+		public async Task<string?> GetChatMessageContentAsync(TalonRAGChatHistory chatHistory)
 		{
 			if (_configurationSettings.IsMissing())
 			{
@@ -38,7 +39,8 @@ namespace TalonRAG.Common.ChatCompletion
 				MaxTokens = 1200
 			};
 
-			return await chatCompletionService.GetChatMessageContentAsync(prompt, executionSettings);
+			var chatMessageContent = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings);
+			return chatMessageContent?.Content;
 		}
 	}
 }

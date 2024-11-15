@@ -1,7 +1,6 @@
-﻿using Microsoft.SemanticKernel;
-using TalonRAG.Common.ChatCompletion;
+﻿using TalonRAG.Common.ChatCompletion;
+using TalonRAG.Common.Domain.DTO;
 using TalonRAG.Common.Embedding;
-using TalonRAG.Common.Persistence.DTO;
 using TalonRAG.Common.Persistence.Repository;
 
 internal class RAGConsoleService(
@@ -11,10 +10,18 @@ internal class RAGConsoleService(
 	private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
 	private readonly IEmbeddingRepository _repository = repository;
 
+	private const string SYSTEM_MESSAGE = $@"
+		You're an AI assistant called TalonRAG who retrieves the latest news article descriptions for fans of the NFL team, Philadelphia Eagles.
+		Based on the similar content, you formulate an informative response based on the similar content you receive using the user's response.
+		Only respond with what is given to you as similar content and don't provide any similar content if a question from the user's
+		response isn't asked.";
+
 	public async Task RunAsync()
 	{
 		try
 		{
+			var chatHistory = new TalonRAGChatHistory(SYSTEM_MESSAGE);
+
 			while (true)
 			{
 				Console.Write("You: ");
@@ -30,8 +37,13 @@ internal class RAGConsoleService(
 
 				var inputEmbedding = await GenerateEmbeddingForInput(userInput);
 				var similarArticleEmbeddings = await GetSimilarArticleEmbeddings(inputEmbedding);
-				var response = await GeneratePrompt(userInput, similarArticleEmbeddings.First());
-				Console.WriteLine($"TalonRAG: {response.Content}");
+
+				var toolMessage = similarArticleEmbeddings.FirstOrDefault()?.Content ?? "";
+				chatHistory.AddToolMessage(toolMessage);
+				chatHistory.AddUserMessage(userInput);
+
+				var content = await GenerateChatMessageContent(chatHistory);
+				Console.WriteLine($"TalonRAG: {content}");
 
                 Console.ResetColor();
             }
@@ -57,16 +69,11 @@ internal class RAGConsoleService(
 		return await _repository.GetSimilarEmbeddingsAsync([.. embedding]);
 	}
 
-	private async Task<ChatMessageContent> GeneratePrompt(string input, ArticleEmbedding articleEmbedding)
+	private async Task<string?> GenerateChatMessageContent(TalonRAGChatHistory chatHistory)
 	{
-		string promptTemplate = $@"
-			You're an AI assistant called TalonRAG who retrieves the latest news article descriptions for fans of the NFL team, Philadelphia Eagles.
-			Based on the similar content, you formulate an informative response based on the similar content you receive using the user's response.
+		var content = await _chatCompletor.GetChatMessageContentAsync(chatHistory);
+		chatHistory.AddAssistantMessage(content ?? "");
 
-			Similar Content: {articleEmbedding.Content}
-
-			User's Response: {input}";
-
-		return await _chatCompletor.GetChatMessageContentAsync(promptTemplate);
+		return content;
 	}
 }
