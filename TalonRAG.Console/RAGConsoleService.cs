@@ -31,8 +31,10 @@ internal class RAGConsoleService(
 				var inputEmbedding = await GenerateEmbeddingForInput(userInput);
 				var similarArticleEmbeddings = await GetSimilarArticleEmbeddings(inputEmbedding);
 				var response = await GeneratePrompt(userInput, similarArticleEmbeddings.First());
-				Console.WriteLine("TalonRAG: " + response.Content);
-			}
+				Console.WriteLine($"TalonRAG: {response.Content}");
+
+                Console.ResetColor();
+            }
 		} catch (Exception ex) 
 		{ 
 			Console.WriteLine($"TalonRAG: Encountered an exception - {ex.Message}");
