@@ -80,12 +80,13 @@ namespace TalonRAG.Common.Persistence.Repository
                 SELECT article_embedding, article_content
 				FROM article_embeddings
 				ORDER BY article_embedding <-> @Embedding
-				LIMIT 3;
+				LIMIT @Limit;
 			";
 
 			using var command = new NpgsqlCommand(sql, connection);
 			var vector = new Vector(embedding);
 			command.Parameters.AddWithValue("@Embedding", vector);
+			command.Parameters.AddWithValue("@Limit", limit);
 
 			await using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
