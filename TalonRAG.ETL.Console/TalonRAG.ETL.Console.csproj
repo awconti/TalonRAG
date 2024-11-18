@@ -17,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Library\TalonRAG.Common\TalonRAG.Common.csproj" />
+    <ProjectReference Include="..\Library\TalonRAG.Domain\TalonRAG.Domain.csproj" />
+    <ProjectReference Include="..\Library\TalonRAG.Infrastructure\TalonRAG.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

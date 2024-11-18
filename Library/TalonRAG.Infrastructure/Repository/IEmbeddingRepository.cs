@@ -1,6 +1,6 @@
-﻿using TalonRAG.Common.Domain.DTO;
+﻿using TalonRAG.Domain.Entity;
 
-namespace TalonRAG.Common.Persistence.Repository
+namespace TalonRAG.Infrastructure.Repository
 {
     /// <summary>
     /// Interface for repository classes seeking to implement vector embedding database operations.

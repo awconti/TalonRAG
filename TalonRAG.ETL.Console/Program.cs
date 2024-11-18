@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TalonRAG.Common.Configuration;
-using TalonRAG.Common.Embedding;
-using TalonRAG.Common.Persistence.Repository;
+using TalonRAG.Domain.Configuration;
+using TalonRAG.Domain.SemanticKernel.Embedding;
+using TalonRAG.ETL.Console.Service;
+using TalonRAG.Infrastructure.Repository;
 
 internal class Program
 {
@@ -21,9 +22,9 @@ internal class Program
 				services.Configure<DatabaseConfigurationSettings>(databaseConfig);
 				services.Configure<EmbeddingGeneratorConfigurationSettings>(embeddingGeneratorConfig);
 
-				services.AddSingleton<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-				services.AddSingleton<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
-				services.AddSingleton<ETLConsoleService>();
+				services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+				services.AddTransient<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
+				services.AddTransient<ETLConsoleService>();
 			})
 			.Build();
 

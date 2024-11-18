@@ -1,7 +1,7 @@
-﻿namespace TalonRAG.Common.Domain.DTO
+﻿namespace TalonRAG.Domain.Entity
 {
     /// <summary>
-    /// Represents embedded content for instances of <see cref="Article"/>.
+    /// Represents persisted embedded article content.
     /// </summary>
     public class ArticleEmbedding : Microsoft.Extensions.AI.Embedding
     {

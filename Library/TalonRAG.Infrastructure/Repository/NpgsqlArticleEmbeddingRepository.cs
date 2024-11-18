@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using Npgsql;
 using Pgvector;
-using TalonRAG.Common.Configuration;
-using TalonRAG.Common.Domain.DTO;
-using TalonRAG.Common.Extensions;
+using TalonRAG.Domain.Configuration;
+using TalonRAG.Domain.Entity;
+using TalonRAG.Domain.Extensions;
 
-namespace TalonRAG.Common.Persistence.Repository
+namespace TalonRAG.Infrastructure.Repository
 {
     /// <summary>
     /// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.

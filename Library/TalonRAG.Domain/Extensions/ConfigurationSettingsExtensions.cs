@@ -1,11 +1,11 @@
-﻿using TalonRAG.Common.Configuration;
+﻿using TalonRAG.Domain.Configuration;
 
-namespace TalonRAG.Common.Extensions
+namespace TalonRAG.Domain.Extensions
 {
 	/// <summary>
 	/// Extensions tailored to configuration settings.
 	/// </summary>
-	internal static class ConfigurationSettingsExtensions
+	public static class ConfigurationSettingsExtensions
 	{
 		/// <summary>
 		/// Determines whether or not model configuration properties are properly set.
@@ -13,7 +13,7 @@ namespace TalonRAG.Common.Extensions
 		/// <param name="modelConfigurationSettings">
 		/// <see cref="ModelConfigurationSettings"/>.
 		/// </param>
-		internal static bool IsMissing(this ModelConfigurationSettings modelConfigurationSettings)
+		public static bool IsMissing(this ModelConfigurationSettings modelConfigurationSettings)
 		{
 			return modelConfigurationSettings == null ||
 				modelConfigurationSettings.ModelId == null ||
@@ -26,7 +26,7 @@ namespace TalonRAG.Common.Extensions
 		/// <param name="databaseConfigurationSettings">
 		/// <see cref="DatabaseConfigurationSettings"/>.
 		/// </param>
-		internal static bool IsMissing(this DatabaseConfigurationSettings databaseConfigurationSettings)
+		public static bool IsMissing(this DatabaseConfigurationSettings databaseConfigurationSettings)
 		{
 			return databaseConfigurationSettings == null ||
 				databaseConfigurationSettings.Connection == null;
