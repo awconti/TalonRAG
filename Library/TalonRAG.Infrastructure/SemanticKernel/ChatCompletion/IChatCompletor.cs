@@ -1,6 +1,4 @@
-﻿using TalonRAG.Domain.Model;
-
-namespace TalonRAG.Domain.SemanticKernel.ChatCompletion
+﻿namespace TalonRAG.Infrastructure.SemanticKernel.ChatCompletion
 {
     /// <summary>
     /// Interface for classes seeking to implement chat completion services via <see cref="Microsoft.SemanticKernel"/>.

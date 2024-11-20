@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TalonRAG.Console.Service;
 using TalonRAG.Domain.Configuration;
-using TalonRAG.Domain.SemanticKernel.ChatCompletion;
-using TalonRAG.Domain.SemanticKernel.Embedding;
 using TalonRAG.Infrastructure.Repository;
+using TalonRAG.Infrastructure.SemanticKernel.ChatCompletion;
+using TalonRAG.Infrastructure.SemanticKernel.Embedding;
 
 internal class Program
 {

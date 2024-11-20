@@ -1,8 +1,7 @@
 ﻿using TalonRAG.Domain.Entity;
-using TalonRAG.Domain.Model;
-using TalonRAG.Domain.SemanticKernel.ChatCompletion;
-using TalonRAG.Domain.SemanticKernel.Embedding;
 using TalonRAG.Infrastructure.Repository;
+using TalonRAG.Infrastructure.SemanticKernel.ChatCompletion;
+using TalonRAG.Infrastructure.SemanticKernel.Embedding;
 
 namespace TalonRAG.Console.Service
 {

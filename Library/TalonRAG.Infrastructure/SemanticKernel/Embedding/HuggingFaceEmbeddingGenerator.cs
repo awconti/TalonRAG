@@ -4,7 +4,7 @@ using Microsoft.SemanticKernel.Embeddings;
 using TalonRAG.Domain.Configuration;
 using TalonRAG.Domain.Extensions;
 
-namespace TalonRAG.Domain.SemanticKernel.Embedding
+namespace TalonRAG.Infrastructure.SemanticKernel.Embedding
 {
 	/// <summary>
 	/// HuggingFace specific implementation of <see cref="IEmbeddingGenerator"/>.

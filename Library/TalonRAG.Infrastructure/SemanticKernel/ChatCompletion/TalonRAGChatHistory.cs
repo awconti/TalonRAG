@@ -1,6 +1,6 @@
 ﻿using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace TalonRAG.Domain.Model
+namespace TalonRAG.Infrastructure.SemanticKernel.ChatCompletion
 {
     /// <summary>
     /// <see cref="ChatHistory"/> specific instance for the TalonRAG solution.

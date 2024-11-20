@@ -4,9 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<NoWarn>SKEXP0070;SKEXP0001;CS8604;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.30.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.HuggingFace" Version="1.30.0-preview" />
     <PackageReference Include="Npgsql" Version="9.0.0" />
     <PackageReference Include="Pgvector" Version="0.3.0" />
   </ItemGroup>

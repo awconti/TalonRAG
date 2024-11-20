@@ -4,9 +4,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
 using TalonRAG.Domain.Configuration;
 using TalonRAG.Domain.Extensions;
-using TalonRAG.Domain.Model;
 
-namespace TalonRAG.Domain.SemanticKernel.ChatCompletion
+namespace TalonRAG.Infrastructure.SemanticKernel.ChatCompletion
 {
     /// <summary>
     /// HuggingFace specific implementation of <see cref="IChatCompletor"/>.

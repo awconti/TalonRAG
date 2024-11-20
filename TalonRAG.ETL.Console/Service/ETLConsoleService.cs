@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using TalonRAG.Domain.Entity;
-using TalonRAG.Domain.SemanticKernel.Embedding;
 using TalonRAG.ETL.Console.DTO;
 using TalonRAG.Infrastructure.Repository;
+using TalonRAG.Infrastructure.SemanticKernel.Embedding;
 
 namespace TalonRAG.ETL.Console.Service
 {

@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents persisted embedded article content.
     /// </summary>
-    public class ArticleEmbedding : Microsoft.Extensions.AI.Embedding
+    public class ArticleEmbedding
     {
         /// <summary>
         /// Float array representing <see cref="Article.Description"/>.
