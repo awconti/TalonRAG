@@ -1,7 +1,7 @@
-﻿namespace TalonRAG.Domain.Configuration
+﻿namespace TalonRAG.Infrastructure.ConfigurationSettings
 {
 	/// <summary>
-	/// Generic configuration settings used when interacting with a specific model.
+	/// Generic configuration settings used when interacting with a specific model via Microsoft.SemanticKernel.
 	/// </summary>
 	public class ModelConfigurationSettings
 	{

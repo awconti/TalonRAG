@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
-using TalonRAG.Domain.Configuration;
-using TalonRAG.Domain.Extensions;
+using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Extensions;
 
 namespace TalonRAG.Infrastructure.SemanticKernel.Embedding
 {

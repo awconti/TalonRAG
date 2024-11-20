@@ -1,19 +1,20 @@
 ﻿using Microsoft.Extensions.Options;
 using Npgsql;
 using Pgvector;
-using TalonRAG.Domain.Configuration;
-using TalonRAG.Domain.Entity;
-using TalonRAG.Domain.Extensions;
+using TalonRAG.Domain.Entities;
+using TalonRAG.Domain.Interfaces;
+using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Extensions;
 
-namespace TalonRAG.Infrastructure.Repository
+namespace TalonRAG.Infrastructure.Repositories
 {
-    /// <summary>
-    /// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
-    /// </summary>
-    /// <param name="configurationSettings">
-    /// <see cref="DatabaseConfigurationSettings"/>.
-    /// </param>
-    public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IEmbeddingRepository
+	/// <summary>
+	/// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
+	/// </summary>
+	/// <param name="configurationSettings">
+	/// <see cref="DatabaseConfigurationSettings"/>.
+	/// </param>
+	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IEmbeddingRepository
 	{
 		private readonly DatabaseConfigurationSettings _configurationSettings = configurationSettings.Value;
 
@@ -40,7 +41,7 @@ namespace TalonRAG.Infrastructure.Repository
 
 				var sql =
 					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content);";
-				
+
 				using var command = new NpgsqlCommand(sql, connection);
 				var vector = new Vector(embedding.Embedding);
 				command.Parameters.AddWithValue("@Embedding", vector);
@@ -59,7 +60,7 @@ namespace TalonRAG.Infrastructure.Repository
 				"COPY article_embeddings (article_embedding, article_content) FROM STDIN (FORMAT BINARY)";
 
 			using var writer = await connection.BeginBinaryImportAsync(command);
-			foreach(var embedding in embeddings)
+			foreach (var embedding in embeddings)
 			{
 				writer.StartRow();
 				writer.Write(new Vector(embedding.Embedding));
@@ -77,7 +78,7 @@ namespace TalonRAG.Infrastructure.Repository
 			await using var connection = await CreateConnection();
 
 			string sql = $@"
-                SELECT article_embedding, article_content
+                SELECT id, article_embedding, article_content
 				FROM article_embeddings
 				ORDER BY article_embedding <-> @Embedding
 				LIMIT @Limit;
@@ -93,6 +94,7 @@ namespace TalonRAG.Infrastructure.Repository
 			{
 				similarArticleEmbeddings.Add(new ArticleEmbedding
 				{
+					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					Embedding = reader.GetFieldValue<Vector>(reader.GetOrdinal("article_embedding")).ToArray(),
 					Content = reader.GetString(reader.GetOrdinal("article_content"))
 				});

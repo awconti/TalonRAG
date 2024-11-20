@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TalonRAG.Console.Service;
-using TalonRAG.Domain.Configuration;
-using TalonRAG.Infrastructure.Repository;
+using TalonRAG.Domain.Interfaces;
+using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Repositories;
 using TalonRAG.Infrastructure.SemanticKernel.ChatCompletion;
 using TalonRAG.Infrastructure.SemanticKernel.Embedding;
 
@@ -28,12 +28,12 @@ internal class Program
 				services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 				services.AddTransient<IChatCompletor, HuggingFaceChatCompletor>();
 				services.AddTransient<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
-				services.AddTransient<RAGConsoleService>();
+				services.AddTransient<RAGConsoleAppService>();
 			})
 			.Build();
 
 		// Resolve and run the application
-		var app = host.Services.GetRequiredService<RAGConsoleService>();
+		var app = host.Services.GetRequiredService<RAGConsoleAppService>();
 		await app.RunAsync();
 	}
 }

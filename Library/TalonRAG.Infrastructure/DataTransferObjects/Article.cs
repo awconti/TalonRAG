@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TalonRAG.ETL.Console.DTO
+namespace TalonRAG.Infrastructure.DataTransferObjects
 {
     /// <summary>
     /// Represents an article retrieved from <a href="https://newsapi.org">News API</a>.

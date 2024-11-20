@@ -1,6 +1,6 @@
-﻿using TalonRAG.Domain.Configuration;
+﻿using TalonRAG.Infrastructure.ConfigurationSettings;
 
-namespace TalonRAG.Domain.Extensions
+namespace TalonRAG.Infrastructure.Extensions
 {
 	/// <summary>
 	/// Extensions tailored to configuration settings.

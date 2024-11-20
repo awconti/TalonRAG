@@ -2,8 +2,8 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
-using TalonRAG.Domain.Configuration;
-using TalonRAG.Domain.Extensions;
+using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Extensions;
 
 namespace TalonRAG.Infrastructure.SemanticKernel.ChatCompletion
 {

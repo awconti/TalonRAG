@@ -1,4 +1,4 @@
-﻿namespace TalonRAG.Domain.Configuration
+﻿namespace TalonRAG.Infrastructure.ConfigurationSettings
 {
 	/// <summary>
 	/// Configuration settings used in the context of a database.

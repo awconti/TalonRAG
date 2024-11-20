@@ -1,6 +1,6 @@
-﻿using TalonRAG.Domain.Entity;
+﻿using TalonRAG.Domain.Entities;
 
-namespace TalonRAG.Infrastructure.Repository
+namespace TalonRAG.Domain.Interfaces
 {
     /// <summary>
     /// Interface for repository classes seeking to implement vector embedding database operations.
