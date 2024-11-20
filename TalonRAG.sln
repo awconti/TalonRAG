@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalonRAG.Domain", "Library\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalonRAG.Infrastructure", "Library\TalonRAG.Infrastructure\TalonRAG.Infrastructure.csproj", "{42FF8006-2016-4D9D-A83F-78B0651D3783}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalonRAG.Application", "Library\TalonRAG.Application\TalonRAG.Application.csproj", "{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{42FF8006-2016-4D9D-A83F-78B0651D3783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42FF8006-2016-4D9D-A83F-78B0651D3783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42FF8006-2016-4D9D-A83F-78B0651D3783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +53,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C7CA8F70-6A18-41B3-8E4E-F60C838B5409} = {000451C0-864E-4B18-B891-F3E0AC4157CF}
 		{42FF8006-2016-4D9D-A83F-78B0651D3783} = {000451C0-864E-4B18-B891-F3E0AC4157CF}
+		{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6} = {000451C0-864E-4B18-B891-F3E0AC4157CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CF59FAE1-DBBC-41DE-B8EB-89577CAE7206}

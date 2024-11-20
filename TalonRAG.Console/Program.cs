@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TalonRAG.Domain.Interfaces;
-using TalonRAG.Infrastructure.ConfigurationSettings;
-using TalonRAG.Infrastructure.Repositories;
-using TalonRAG.Infrastructure.SemanticKernel.ChatCompletion;
-using TalonRAG.Infrastructure.SemanticKernel.Embedding;
+using TalonRAG.Application.Registrars;
+using TalonRAG.Application.Services;
 
 internal class Program
 {
@@ -16,24 +13,11 @@ internal class Program
 			{
 				config.AddJsonFile("./Properties/appSettings.json", optional: false, reloadOnChange: true);
 			})
-			.ConfigureServices((context, services) =>
-			{
-				var databaseConfig = context.Configuration.GetSection("DatabaseConfigurationSettings");
-				var chatCompletorConfig = context.Configuration.GetSection("ChatCompletorConfigurationSettings");
-				var embeddingGeneratorConfig = context.Configuration.GetSection("EmbeddingGeneratorConfigurationSettings");
-				services.Configure<DatabaseConfigurationSettings>(databaseConfig);
-				services.Configure<ChatCompletorConfigurationSettings>(chatCompletorConfig);
-				services.Configure<EmbeddingGeneratorConfigurationSettings>(embeddingGeneratorConfig);
-
-				services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-				services.AddTransient<IChatCompletor, HuggingFaceChatCompletor>();
-				services.AddTransient<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
-				services.AddTransient<RAGConsoleAppService>();
-			})
+			.ConfigureServices(RAGConsoleDependencyRegistrar.Register)
 			.Build();
 
 		// Resolve and run the application
-		var app = host.Services.GetRequiredService<RAGConsoleAppService>();
+		var app = host.Services.GetRequiredService<IConsoleAppService>();
 		await app.RunAsync();
 	}
 }
