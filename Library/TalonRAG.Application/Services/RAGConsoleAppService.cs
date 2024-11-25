@@ -1,5 +1,4 @@
-﻿using TalonRAG.Application.Interfaces;
-using TalonRAG.Domain.Entities;
+﻿using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Domain.Models;
 

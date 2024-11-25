@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TalonRAG.Application.Interfaces;
 using TalonRAG.Application.Services;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Infrastructure.ConfigurationSettings;

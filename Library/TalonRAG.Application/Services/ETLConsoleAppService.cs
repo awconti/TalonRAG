@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
-using TalonRAG.Application.DataTransferObjects;
-using TalonRAG.Application.Interfaces;
 using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Infrastructure.DataTransferObjects;
 
 namespace TalonRAG.Application.Services
 {

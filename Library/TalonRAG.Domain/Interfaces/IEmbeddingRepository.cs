@@ -3,7 +3,7 @@
 namespace TalonRAG.Domain.Interfaces
 {
     /// <summary>
-    /// Interface for repository classes seeking to implement vector embedding database operations.
+    /// Interface for repository classes seeking to implement vector embedding database operations on behalf of the domain.
     /// </summary>
     public interface IEmbeddingRepository
 	{

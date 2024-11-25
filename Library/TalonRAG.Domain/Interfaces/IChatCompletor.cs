@@ -3,7 +3,7 @@
 namespace TalonRAG.Domain.Interfaces
 {
 	/// <summary>
-	/// Interface for classes seeking to implement chat completion services via Microsoft.SemanticKernel.
+	/// Interface for classes seeking to implement chat completion services on behalf of the domain.
 	/// </summary>
 	public interface IChatCompletor
 	{
