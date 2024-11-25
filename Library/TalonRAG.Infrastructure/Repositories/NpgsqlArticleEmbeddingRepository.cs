@@ -80,7 +80,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			string sql = $@"
                 SELECT id, article_embedding, article_content
 				FROM article_embeddings
-				ORDER BY article_embedding <-> @Embedding
+				ORDER BY article_embedding <#> @Embedding
 				LIMIT @Limit;
 			";
 

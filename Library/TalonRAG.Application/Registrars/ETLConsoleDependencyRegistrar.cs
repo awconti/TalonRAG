@@ -1,17 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TalonRAG.Application.Interfaces;
 using TalonRAG.Application.Services;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Infrastructure.ConfigurationSettings;
 using TalonRAG.Infrastructure.Repositories;
-using TalonRAG.Infrastructure.SemanticKernel.Embedding;
+using TalonRAG.Infrastructure.SemanticKernel;
 
 namespace TalonRAG.Application.Registrars
 {
-	/// <summary>
-	/// Class dedicated to registering dependencies for the TalonRAG ETL console solution.
-	/// </summary>
-	public static class ETLConsoleDependencyRegistrar
+    /// <summary>
+    /// Class dedicated to registering dependencies for the TalonRAG ETL console solution.
+    /// </summary>
+    public static class ETLConsoleDependencyRegistrar
 	{
 		/// <summary>
 		/// Registers dependencies for the TalonRAG ETL console solution.

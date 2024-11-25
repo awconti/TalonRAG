@@ -1,22 +1,22 @@
-﻿using TalonRAG.Domain.Entities;
+﻿using TalonRAG.Application.Interfaces;
+using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
-using TalonRAG.Infrastructure.SemanticKernel.ChatCompletion;
-using TalonRAG.Infrastructure.SemanticKernel.Embedding;
+using TalonRAG.Domain.Models;
 
 namespace TalonRAG.Application.Services
 {
-	/// <summary>
-	/// RAG console application service class implementation of <see cref="IConsoleAppService" />.
-	/// </summary>
-	/// <param name="chatCompletor">
-	/// <see cref="IChatCompletor" />.
-	/// </param>
-	/// <param name="embeddingGenerator">
-	/// <see cref="IEmbeddingGenerator" />.
-	/// </param>
-	/// <param name="repository">
-	/// <see cref="IEmbeddingRepository" />.
-	public class RAGConsoleAppService(
+    /// <summary>
+    /// RAG console application service class implementation of <see cref="IConsoleAppService" />.
+    /// </summary>
+    /// <param name="chatCompletor">
+    /// <see cref="IChatCompletor" />.
+    /// </param>
+    /// <param name="embeddingGenerator">
+    /// <see cref="IEmbeddingGenerator" />.
+    /// </param>
+    /// <param name="repository">
+    /// <see cref="IEmbeddingRepository" />.
+    public class RAGConsoleAppService(
 		IChatCompletor chatCompletor, IEmbeddingGenerator embeddingGenerator, IEmbeddingRepository repository) : IConsoleAppService
 	{
 		private const string SYSTEM_MESSAGE = $@"
@@ -34,7 +34,8 @@ namespace TalonRAG.Application.Services
 		{
 			try
 			{
-				var chatHistory = new TalonRAGChatHistory(SYSTEM_MESSAGE);
+				var chatHistory = new ChatHistory();
+				chatHistory.AddSystemMessage(SYSTEM_MESSAGE);
 
 				while (true)
 				{
@@ -85,7 +86,7 @@ namespace TalonRAG.Application.Services
 			return await _repository.GetSimilarEmbeddingsAsync([.. embedding]);
 		}
 
-		private async Task<string?> GenerateChatMessageContent(TalonRAGChatHistory chatHistory)
+		private async Task<string?> GenerateChatMessageContent(ChatHistory chatHistory)
 		{
 			return await _chatCompletor.GetChatMessageContentAsync(chatHistory);
 		}

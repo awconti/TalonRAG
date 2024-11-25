@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TalonRAG.Application.Interfaces;
 using TalonRAG.Application.Registrars;
-using TalonRAG.Application.Services;
 
 internal class Program
 {

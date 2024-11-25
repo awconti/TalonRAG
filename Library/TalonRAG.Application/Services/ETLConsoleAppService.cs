@@ -1,21 +1,21 @@
 ﻿using System.Text.Json;
 using TalonRAG.Application.DataTransferObjects;
+using TalonRAG.Application.Interfaces;
 using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
-using TalonRAG.Infrastructure.SemanticKernel.Embedding;
 
 namespace TalonRAG.Application.Services
 {
-	/// <summary>
-	/// ETL console application service class implementation of <see cref="IConsoleAppService" />.
-	/// </summary>
-	/// <param name="embeddingGenerator">
-	/// <see cref="IEmbeddingGenerator" />.
-	/// </param>
-	/// <param name="repository">
-	/// <see cref="IEmbeddingRepository" />.
-	/// </param>
-	public class ETLConsoleAppService(
+    /// <summary>
+    /// ETL console application service class implementation of <see cref="IConsoleAppService" />.
+    /// </summary>
+    /// <param name="embeddingGenerator">
+    /// <see cref="IEmbeddingGenerator" />.
+    /// </param>
+    /// <param name="repository">
+    /// <see cref="IEmbeddingRepository" />.
+    /// </param>
+    public class ETLConsoleAppService(
 		IEmbeddingGenerator embeddingGenerator, IEmbeddingRepository repository) : IConsoleAppService
 	{
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;

@@ -1,4 +1,4 @@
-﻿namespace TalonRAG.Infrastructure.SemanticKernel.Embedding
+﻿namespace TalonRAG.Domain.Interfaces
 {
 	/// <summary>
 	/// Interface for classes seeking to implement embedding generation services via Microsoft.SemanticKernel.
