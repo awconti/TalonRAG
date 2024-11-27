@@ -38,6 +38,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="limit">
 		/// Number of embeddings to retrieve.
 		/// </param>
-		Task<IEnumerable<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
+		Task<IList<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
 	}
 }

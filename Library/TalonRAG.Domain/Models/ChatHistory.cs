@@ -3,7 +3,7 @@
 namespace TalonRAG.Domain.Models
 {
 	/// <summary>
-	/// Model class for providing managing the history of a chat on behalf of the domain.
+	/// Model class for providing the history of a chat on behalf of the domain.
 	/// </summary>
 	public class ChatHistory
 	{

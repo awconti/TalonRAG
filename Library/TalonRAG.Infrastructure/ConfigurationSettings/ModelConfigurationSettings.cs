@@ -1,7 +1,7 @@
 ﻿namespace TalonRAG.Infrastructure.ConfigurationSettings
 {
 	/// <summary>
-	/// Generic configuration settings used when interacting with a specific model via Microsoft.SemanticKernel.
+	/// Generic configuration settings used when interacting with a specific AI model.
 	/// </summary>
 	public class ModelConfigurationSettings
 	{

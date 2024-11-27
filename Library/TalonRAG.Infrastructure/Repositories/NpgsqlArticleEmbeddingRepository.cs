@@ -71,7 +71,7 @@ namespace TalonRAG.Infrastructure.Repositories
 		}
 
 		/// <inheritdoc cref="IEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
-		public async Task<IEnumerable<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
+		public async Task<IList<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
 		{
 			var similarArticleEmbeddings = new List<ArticleEmbedding>();
 
