@@ -9,16 +9,16 @@ using TalonRAG.Infrastructure.Extensions;
 namespace TalonRAG.Infrastructure.Repositories
 {
 	/// <summary>
-	/// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
+	/// Npgsql specific embedding repository implementation of <see cref="IArticleEmbeddingRepository"/>.
 	/// </summary>
 	/// <param name="configurationSettings">
 	/// <see cref="DatabaseConfigurationSettings"/>.
 	/// </param>
-	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IEmbeddingRepository
+	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IArticleEmbeddingRepository
 	{
 		private readonly DatabaseConfigurationSettings _configurationSettings = configurationSettings.Value;
 
-		/// <inheritdoc cref="IEmbeddingRepository.DeleteAllEmbeddingsAsync" />
+		/// <inheritdoc cref="IArticleEmbeddingRepository.DeleteAllEmbeddingsAsync" />
 		public async Task DeleteAllEmbeddingsAsync()
 		{
 			using var connection = await CreateConnection();
@@ -30,7 +30,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			await command.ExecuteNonQueryAsync();
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbedding})" />
+		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbedding})" />
 		public async Task InsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings)
 		{
 			using var connection = await CreateConnection();
@@ -51,7 +51,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			}
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbedding})" />
+		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbedding})" />
 		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings)
 		{
 			using var connection = await CreateConnection();
@@ -70,7 +70,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			writer.Complete();
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
+		/// <inheritdoc cref="IArticleEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
 		public async Task<IList<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
 		{
 			var similarArticleEmbeddings = new List<ArticleEmbedding>();

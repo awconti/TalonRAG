@@ -31,7 +31,7 @@ namespace TalonRAG.Application.Registrars
 			services.Configure<ChatCompletorConfigurationSettings>(chatCompletorConfig);
 			services.Configure<EmbeddingGeneratorConfigurationSettings>(embeddingGeneratorConfig);
 
-			services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 			services.AddTransient<IChatCompletor, HuggingFaceChatCompletor>();
 			services.AddTransient<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
 			services.AddTransient<IConsoleAppService, RAGConsoleAppService>();

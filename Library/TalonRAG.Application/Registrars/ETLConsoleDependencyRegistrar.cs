@@ -29,7 +29,7 @@ namespace TalonRAG.Application.Registrars
 			services.Configure<DatabaseConfigurationSettings>(databaseConfig);
 			services.Configure<EmbeddingGeneratorConfigurationSettings>(embeddingGeneratorConfig);
 
-			services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 			services.AddTransient<IEmbeddingGenerator, HuggingFaceEmbeddingGenerator>();
 			services.AddTransient<IConsoleAppService, ETLConsoleAppService>();
 		}

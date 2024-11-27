@@ -14,9 +14,9 @@ namespace TalonRAG.Application.Services
     /// <see cref="IEmbeddingGenerator" />.
     /// </param>
     /// <param name="repository">
-    /// <see cref="IEmbeddingRepository" />.
+    /// <see cref="IArticleEmbeddingRepository" />.
     public class RAGConsoleAppService(
-		IChatCompletor chatCompletor, IEmbeddingGenerator embeddingGenerator, IEmbeddingRepository repository) : IConsoleAppService
+		IChatCompletor chatCompletor, IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository) : IConsoleAppService
 	{
 		private const string SYSTEM_MESSAGE = $@"
 			You're an AI assistant called TalonRAG who retrieves the latest news article descriptions for fans of the NFL team, Philadelphia Eagles.
@@ -26,7 +26,7 @@ namespace TalonRAG.Application.Services
 
 		private readonly IChatCompletor _chatCompletor = chatCompletor;
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
-		private readonly IEmbeddingRepository _repository = repository;
+		private readonly IArticleEmbeddingRepository _repository = repository;
 
 		/// <inheritdoc cref="IConsoleAppService" />
 		public async Task RunAsync()

@@ -12,13 +12,13 @@ namespace TalonRAG.Application.Services
     /// <see cref="IEmbeddingGenerator" />.
     /// </param>
     /// <param name="repository">
-    /// <see cref="IEmbeddingRepository" />.
+    /// <see cref="IArticleEmbeddingRepository" />.
     /// </param>
     public class ETLConsoleAppService(
-		IEmbeddingGenerator embeddingGenerator, IEmbeddingRepository repository) : IConsoleAppService
+		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository) : IConsoleAppService
 	{
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
-		private readonly IEmbeddingRepository _repository = repository;
+		private readonly IArticleEmbeddingRepository _repository = repository;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()

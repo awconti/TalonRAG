@@ -3,9 +3,9 @@
 namespace TalonRAG.Domain.Interfaces
 {
     /// <summary>
-    /// Interface for repository classes seeking to implement vector embedding database operations on behalf of the domain.
+    /// Interface for repository classes seeking to implement vector embedding database operations for <see cref="ArticleEmbedding" /> instances on behalf of the domain.
     /// </summary>
-    public interface IEmbeddingRepository
+    public interface IArticleEmbeddingRepository
 	{
 		/// <summary>
 		/// Purges all vector embeddings.
