@@ -11,21 +11,28 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// <summary>
 	/// Npgsql specific embedding repository implementation of <see cref="IArticleEmbeddingRepository"/>.
 	/// </summary>
-	/// <param name="configurationSettings">
-	/// <see cref="DatabaseConfigurationSettings"/>.
+	/// <param name="options">
+	/// <see cref="IOptions{DatabaseConfigurationSettings}"/>.
 	/// </param>
-	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> configurationSettings) : IArticleEmbeddingRepository
+	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> options) : IArticleEmbeddingRepository
 	{
-		private readonly DatabaseConfigurationSettings _configurationSettings = configurationSettings.Value;
+		private readonly DatabaseConfigurationSettings _configurationSettings = options.Value;
 
 		/// <inheritdoc cref="IArticleEmbeddingRepository.DeleteAllEmbeddingsAsync" />
-		public async Task DeleteAllEmbeddingsAsync()
+		public async Task DeleteAllEmbeddingsAsync(DateTime? createDate = null)
 		{
 			using var connection = await CreateConnection();
 
-			var sql = "DELETE FROM article_embeddings;";
+			var sql = "DELETE FROM article_embeddings ";
 
 			using var command = new NpgsqlCommand(sql, connection);
+			
+			if (createDate != null)
+			{
+				sql += "WHERE create_date AT TIME ZONE 'UTC' < @CreateDate;";
+
+				command.Parameters.AddWithValue("@CreateDate", createDate);
+			}
 
 			await command.ExecuteNonQueryAsync();
 		}

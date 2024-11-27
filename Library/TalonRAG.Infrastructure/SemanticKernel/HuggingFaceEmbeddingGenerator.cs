@@ -10,12 +10,12 @@ namespace TalonRAG.Infrastructure.SemanticKernel
     /// <summary>
     /// HuggingFace specific implementation of <see cref="IEmbeddingGenerator"/>.
     /// </summary>
-    /// <param name="configurationSettings">
-    /// <see cref="EmbeddingGeneratorConfigurationSettings"/>.
+    /// <param name="options">
+    /// <see cref="IOptions{EmbeddingGeneratorConfigurationSettings}"/>.
     /// </param>
-    public class HuggingFaceEmbeddingGenerator(IOptions<EmbeddingGeneratorConfigurationSettings> configurationSettings) : IEmbeddingGenerator
+    public class HuggingFaceEmbeddingGenerator(IOptions<EmbeddingGeneratorConfigurationSettings> options) : IEmbeddingGenerator
     {
-        private readonly EmbeddingGeneratorConfigurationSettings _configurationSettings = configurationSettings.Value;
+        private readonly EmbeddingGeneratorConfigurationSettings _configurationSettings = options.Value;
 
         /// <inheritdoc cref="IEmbeddingGenerator.GenerateEmbeddingsAsync(IList{string})"/>
         public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(IList<string> text)

@@ -3,9 +3,9 @@
 namespace TalonRAG.Infrastructure.DataTransferObjects
 {
     /// <summary>
-    /// Represents an article retrieved from <a href="https://newsapi.org">News API</a>.
+    /// DTO representing an article retrieved from <a href="https://newsapi.org">News API</a>.
     /// </summary>
-    public class Article
+    public class NewsApiArticle
     {
         /// <summary>
         /// Represents description field in JSON response.

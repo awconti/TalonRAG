@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using TalonRAG.Domain.Entities;
+﻿using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Infrastructure.DataTransferObjects;
+using TalonRAG.Infrastructure.NewsAPI;
 
 namespace TalonRAG.Application.Services
 {
@@ -14,33 +14,43 @@ namespace TalonRAG.Application.Services
     /// <param name="repository">
     /// <see cref="IArticleEmbeddingRepository" />.
     /// </param>
+	/// <param name="newsApiClient">
+	/// <see cref="INewsApiClient" />.
+	/// </param>
     public class ETLConsoleAppService(
-		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository) : IConsoleAppService
+		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository, INewsApiClient newsApiClient) : IConsoleAppService
 	{
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
 		private readonly IArticleEmbeddingRepository _repository = repository;
+		private readonly INewsApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()
 		{
-			var articles = await GetArticles();
+			try
+			{
+				var maxArticleDate = DateTime.UtcNow.AddDays(-2).Date;
 
-			var articleEmbeddings = await GetEmbeddingsForArticleDescriptions(articles);
+				var articles = await GetArticles(maxArticleDate);
 
-			await BulkInsertEmbeddings(articleEmbeddings);
+				var articleEmbeddings = await GetEmbeddingsForArticleDescriptions(articles);
+
+				await BulkInsertEmbeddings(maxArticleDate, articleEmbeddings);
+			} 
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Encountered an exception - {ex.Message}");
+			}
 		}
 
-		private static async Task<List<Article>> GetArticles()
+		private async Task<IList<NewsApiArticle>> GetArticles(DateTime maxArticleDate)
 		{
-			string filePath = "./NewsApiArticles.json";
-			string jsonString = await File.ReadAllTextAsync(filePath);
+			var response = await _newsApiClient.GetAsync($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
 
-			var articles = JsonSerializer.Deserialize<List<Article>>(jsonString);
-
-			return articles ?? [];
+			return response.Articles ?? [];
 		}
 
-		private async Task<IList<ArticleEmbedding>> GetEmbeddingsForArticleDescriptions(IList<Article> articles)
+		private async Task<IList<ArticleEmbedding>> GetEmbeddingsForArticleDescriptions(IList<NewsApiArticle> articles)
 		{
 			var articleEmbeddings = new List<ArticleEmbedding>();
 			foreach (var article in articles)
@@ -62,9 +72,9 @@ namespace TalonRAG.Application.Services
 			return articleEmbeddings;
 		}
 
-		private async Task BulkInsertEmbeddings(IList<ArticleEmbedding> articleEmbeddings)
+		private async Task BulkInsertEmbeddings(DateTime maxArticleDate, IList<ArticleEmbedding> articleEmbeddings)
 		{
-			await _repository.DeleteAllEmbeddingsAsync();
+			await _repository.DeleteAllEmbeddingsAsync(maxArticleDate);
 			await _repository.BulkInsertEmbeddingsAsync(articleEmbeddings);
 		}
 	}

@@ -12,14 +12,14 @@ namespace TalonRAG.Infrastructure.SemanticKernel
     /// <summary>
     /// HuggingFace specific implementation of <see cref="IChatCompletor"/>.
     /// </summary>
-    /// <param name="configurationSettings">
-    /// <see cref="ChatCompletorConfigurationSettings"/>.
+    /// <param name="options">
+    /// <see cref="IOptions{ChatCompletorConfigurationSettings}"/>.
     /// </param>
-    public class HuggingFaceChatCompletor(IOptions<ChatCompletorConfigurationSettings> configurationSettings) : IChatCompletor
+    public class HuggingFaceChatCompletor(IOptions<ChatCompletorConfigurationSettings> options) : IChatCompletor
     {
-        private readonly ChatCompletorConfigurationSettings _configurationSettings = configurationSettings.Value;
+        private readonly ChatCompletorConfigurationSettings _configurationSettings = options.Value;
 
-        /// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(string)" />
+        /// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(ChatHistory)" />
         public async Task<string?> GetChatMessageContentAsync(ChatHistory chatHistory)
         {
             if (_configurationSettings.IsMissing())

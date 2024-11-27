@@ -10,7 +10,10 @@ namespace TalonRAG.Domain.Interfaces
 		/// <summary>
 		/// Purges all vector embeddings.
 		/// </summary>
-		Task DeleteAllEmbeddingsAsync();
+		/// <param name="createDate">
+		/// Optional maximum create date to consider when purging vector embeddings.
+		/// </param>
+		Task DeleteAllEmbeddingsAsync(DateTime? createDate = null);
 
 		/// <summary>
 		/// Inserts a list collection of <see cref="ArticleEmbedding"/>.

@@ -8,5 +8,6 @@ GRANT USAGE ON SCHEMA public TO talonragsvc;
 CREATE TABLE IF NOT EXISTS public.article_embeddings (
     id SERIAL PRIMARY KEY,
     article_embedding VECTOR(384),
-    article_content TEXT
+    article_content TEXT,
+    create_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
