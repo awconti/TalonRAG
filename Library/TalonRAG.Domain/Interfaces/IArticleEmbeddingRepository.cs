@@ -3,7 +3,7 @@
 namespace TalonRAG.Domain.Interfaces
 {
     /// <summary>
-    /// Interface for repository classes seeking to implement vector embedding database operations for <see cref="ArticleEmbedding" /> instances on behalf of the domain.
+    /// Interface for repository classes seeking to implement vector embedding database operations for <see cref="ArticleEmbeddingRecord" /> instances on behalf of the domain.
     /// </summary>
     public interface IArticleEmbeddingRepository
 	{
@@ -16,19 +16,19 @@ namespace TalonRAG.Domain.Interfaces
 		Task DeleteAllEmbeddingsAsync(DateTime? createDate = null);
 
 		/// <summary>
-		/// Inserts a list collection of <see cref="ArticleEmbedding"/>.
+		/// Inserts a list collection of <see cref="ArticleEmbeddingRecord"/>.
 		/// TODO: Replace w/ batched bulk insert.
 		/// </summary>
 		/// <param name="embeddings">
-		/// List collection of <see cref="ArticleEmbedding"/>.
+		/// List collection of <see cref="ArticleEmbeddingRecord"/>.
 		/// </param>
 		Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
 
 		/// <summary>
-		/// Bulk inserts a list collection of <see cref="ArticleEmbedding"/>.
+		/// Bulk inserts a list collection of <see cref="ArticleEmbeddingRecord"/>.
 		/// </summary>
 		/// <param name="embeddings">
-		/// List collection of <see cref="ArticleEmbedding"/>.
+		/// List collection of <see cref="ArticleEmbeddingRecord"/>.
 		/// </param>
 		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
 
