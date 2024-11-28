@@ -1,26 +1,26 @@
 ﻿using System.Text.Json;
-using TalonRAG.Infrastructure.DataTransferObjects;
+using TalonRAG.Domain.Interfaces;
 
 namespace TalonRAG.Infrastructure.NewsAPI
 {
 	/// <summary>
-	/// Generic implementation of <see cref="INewsApiClient" />.
+	/// <a href="https://newsapi.org">News API</a> specific implementation of <see cref="IExternalArticleApiClient"/>.
 	/// </summary>
 	/// <param name="httpClient">
 	/// <see cref="HttpClient" />.
 	/// </param>
-	public class NewsApiClient(HttpClient httpClient) : INewsApiClient
+	public class NewsApiClient(HttpClient httpClient) : IExternalArticleApiClient
 	{
 		private readonly HttpClient _httpClient = httpClient;
 
-		/// <inheritdoc cref="INewsApiClient.GetAsync(string)" />
-		public async Task<NewsApiResponse> GetAsync(string endpoint)
+		/// <inheritdoc cref="IExternalArticleApiClient.GetArticlesAsync(string)" />
+		public async Task<T> GetArticlesAsync<T>(string endpoint) where T : class, new()
 		{
 			var response = await _httpClient.GetAsync(endpoint);
 			response.EnsureSuccessStatusCode();
 
 			var jsonResponse = await response.Content.ReadAsStringAsync();
-			return JsonSerializer.Deserialize<NewsApiResponse>(jsonResponse) ?? new();
+			return JsonSerializer.Deserialize<T>(jsonResponse) ?? new();
 		}
 	}
 }

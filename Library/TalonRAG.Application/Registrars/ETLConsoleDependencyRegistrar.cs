@@ -33,7 +33,7 @@ namespace TalonRAG.Application.Registrars
 			services.Configure<EmbeddingGeneratorConfigurationSettings>(embeddingGeneratorConfig);
 			services.Configure<NewsApiConfigurationSettings>(newsApiConfig);
 
-			services.AddHttpClient<INewsApiClient, NewsApiClient>((serviceProvider, client) =>
+			services.AddHttpClient<IExternalArticleApiClient, NewsApiClient>((serviceProvider, client) =>
 			{
 				var settings = serviceProvider.GetRequiredService<IOptions<NewsApiConfigurationSettings>>().Value;
 				client.BaseAddress = new Uri(settings.BaseUrl ?? "");

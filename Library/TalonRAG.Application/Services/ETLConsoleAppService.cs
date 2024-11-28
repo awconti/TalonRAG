@@ -1,7 +1,6 @@
-﻿using TalonRAG.Domain.Entities;
+﻿using TalonRAG.Application.DataTransferObjects;
+using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
-using TalonRAG.Infrastructure.DataTransferObjects;
-using TalonRAG.Infrastructure.NewsAPI;
 
 namespace TalonRAG.Application.Services
 {
@@ -15,21 +14,21 @@ namespace TalonRAG.Application.Services
     /// <see cref="IArticleEmbeddingRepository" />.
     /// </param>
 	/// <param name="newsApiClient">
-	/// <see cref="INewsApiClient" />.
+	/// <see cref="IExternalArticleApiClient" />.
 	/// </param>
     public class ETLConsoleAppService(
-		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository, INewsApiClient newsApiClient) : IConsoleAppService
+		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository, IExternalArticleApiClient newsApiClient) : IConsoleAppService
 	{
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
 		private readonly IArticleEmbeddingRepository _repository = repository;
-		private readonly INewsApiClient _newsApiClient = newsApiClient;
+		private readonly IExternalArticleApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()
 		{
 			try
 			{
-				var maxArticleDate = DateTime.UtcNow.AddDays(-2).Date;
+				var maxArticleDate = DateTime.UtcNow.AddDays(-30).Date;
 
 				var articles = await GetArticles(maxArticleDate);
 
@@ -43,14 +42,16 @@ namespace TalonRAG.Application.Services
 			}
 		}
 
-		private async Task<IList<NewsApiArticle>> GetArticles(DateTime maxArticleDate)
+		private async Task<IList<NewsApiV2Article>> GetArticles(DateTime maxArticleDate)
 		{
-			var response = await _newsApiClient.GetAsync($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
+			var response = 
+				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>(
+					$"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
 
 			return response.Articles ?? [];
 		}
 
-		private async Task<IList<ArticleEmbedding>> GetEmbeddingsForArticleDescriptions(IList<NewsApiArticle> articles)
+		private async Task<IList<ArticleEmbedding>> GetEmbeddingsForArticleDescriptions(IList<NewsApiV2Article> articles)
 		{
 			var articleEmbeddings = new List<ArticleEmbedding>();
 			foreach (var article in articles)

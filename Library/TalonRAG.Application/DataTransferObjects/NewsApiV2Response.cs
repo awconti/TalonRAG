@@ -1,16 +1,16 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TalonRAG.Infrastructure.DataTransferObjects
+namespace TalonRAG.Application.DataTransferObjects
 {
 	/// <summary>
 	/// DTO representing HTTP response from <a href="https://newsapi.org">News API</a>.
 	/// </summary>
-	public class NewsApiResponse
+	public class NewsApiV2Response
 	{
 		/// <summary>
 		/// List collection of <see cref="IList{NewsApiArticle?}"/>
 		/// </summary>
 		[JsonPropertyName("articles")]
-		public IList<NewsApiArticle>? Articles { get; set; }
+		public IList<NewsApiV2Article>? Articles { get; set; }
 	}
 }

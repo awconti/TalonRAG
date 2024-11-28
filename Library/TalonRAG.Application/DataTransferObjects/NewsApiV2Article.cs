@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TalonRAG.Infrastructure.DataTransferObjects
+namespace TalonRAG.Application.DataTransferObjects
 {
     /// <summary>
     /// DTO representing an article retrieved from <a href="https://newsapi.org">News API</a>.
     /// </summary>
-    public class NewsApiArticle
+    public class NewsApiV2Article
     {
         /// <summary>
         /// Represents description field in JSON response.
