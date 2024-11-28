@@ -28,7 +28,7 @@ namespace TalonRAG.Application.Services
 		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
 		private readonly IArticleEmbeddingRepository _repository = repository;
 
-		/// <inheritdoc cref="IConsoleAppService" />
+		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()
 		{
 			try

@@ -34,8 +34,6 @@ namespace TalonRAG.Infrastructure.Repositories
 		{
 			foreach (var embedding in embeddings)
 			{
-				if (embedding == null || embedding.Embedding == null || embedding.Content == null) { continue; }
-
 				var sql =
 					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content);";
 

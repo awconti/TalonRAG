@@ -25,7 +25,7 @@ namespace TalonRAG.Domain.Entities
 		/// <summary>
 		/// The content of the message.
 		/// </summary>
-		public string Content { get; set; }
+		public string? Content { get; set; }
 
 		/// <summary>
 		/// The date and time (UTC) which message was created.
