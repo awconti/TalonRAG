@@ -37,6 +37,7 @@ namespace TalonRAG.Application.Registrars
 			{
 				var settings = serviceProvider.GetRequiredService<IOptions<NewsApiConfigurationSettings>>().Value;
 				client.BaseAddress = new Uri(settings.BaseUrl ?? "");
+				client.Timeout = TimeSpan.FromSeconds(10);
 				client.DefaultRequestHeaders.Add("Authorization", $"Bearer {settings.ApiKey}");
 			});
 

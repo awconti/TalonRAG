@@ -33,8 +33,8 @@ namespace TalonRAG.Application.Services
 		{
 			try
 			{
-				var chatHistory = new Conversation();
-				chatHistory.AddSystemMessage(SYSTEM_MESSAGE);
+				var conversation = new Conversation();
+				conversation.AddSystemMessage(SYSTEM_MESSAGE);
 
 				while (true)
 				{
@@ -53,11 +53,11 @@ namespace TalonRAG.Application.Services
 					var similarArticleEmbeddings = await GetSimilarArticleEmbeddingsAsync(inputEmbedding);
 
 					var toolMessage = string.Join(", ", similarArticleEmbeddings.Select(article => article.Content));
-					chatHistory.AddToolMessage(toolMessage);
-					chatHistory.AddUserMessage(userInput);
+					conversation.AddToolMessage(toolMessage);
+					conversation.AddUserMessage(userInput);
 
-					var content = await GenerateChatMessageContentAsync(chatHistory);
-					chatHistory.AddAssistantMessage(content ?? "");
+					var content = await GenerateChatMessageContentAsync(conversation);
+					conversation.AddAssistantMessage(content ?? "");
 
 					Console.WriteLine($"TalonRAG: {content}");
 

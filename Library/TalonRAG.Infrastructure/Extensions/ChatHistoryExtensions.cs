@@ -1,4 +1,5 @@
 ﻿using Microsoft.SemanticKernel.ChatCompletion;
+using TalonRAG.Domain.Enums;
 using TalonRAG.Domain.Models;
 
 namespace TalonRAG.Infrastructure.Extensions
@@ -15,20 +16,20 @@ namespace TalonRAG.Infrastructure.Extensions
 		public static ChatHistory ToChatHistory(this Conversation conversation)
 		{
 			var systemMessage = 
-				conversation.Messages.LastOrDefault(message => message.AuthorRole == Domain.Enums.AuthorRole.System);
+				conversation.Messages.LastOrDefault(message => message.AuthorRole == MessageAuthorRole.System);
 
 			var chatHistory = new ChatHistory(systemMessage?.Content);
 			foreach (var message in conversation.Messages)
 			{
 				switch(message.AuthorRole)
 				{
-					case Domain.Enums.AuthorRole.Tool:
+					case MessageAuthorRole.Tool:
 						chatHistory.AddMessage(AuthorRole.Tool, message.Content);
 						break;
-					case Domain.Enums.AuthorRole.User:
+					case MessageAuthorRole.User:
 						chatHistory.AddUserMessage(message.Content);
 						break;
-					case Domain.Enums.AuthorRole.Assistant:
+					case MessageAuthorRole.Assistant:
 						chatHistory.AddAssistantMessage(message.Content);
 						break;
 				}

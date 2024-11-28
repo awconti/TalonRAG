@@ -18,13 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="PgsqlDockerSetup\Scripts\init.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NewsApiArticles.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Properties\appSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

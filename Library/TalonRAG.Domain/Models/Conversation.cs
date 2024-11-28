@@ -20,7 +20,7 @@ namespace TalonRAG.Domain.Models
 		/// </param>
 		public void AddSystemMessage(string message)
 		{
-			AddMessage(AuthorRole.System, message);
+			AddMessage(MessageAuthorRole.System, message);
 		}
 
 		/// <summary>
@@ -31,7 +31,7 @@ namespace TalonRAG.Domain.Models
 		/// </param>
 		public void AddAssistantMessage(string message)
 		{
-			AddMessage(AuthorRole.Assistant, message);
+			AddMessage(MessageAuthorRole.Assistant, message);
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@ namespace TalonRAG.Domain.Models
 		/// </param>
 		public void AddUserMessage(string message)
 		{
-			AddMessage(AuthorRole.User, message);
+			AddMessage(MessageAuthorRole.User, message);
 		}
 
 		/// <summary>
@@ -53,10 +53,10 @@ namespace TalonRAG.Domain.Models
 		/// </param>
 		public void AddToolMessage(string message)
 		{
-			AddMessage(AuthorRole.Tool, message);
+			AddMessage(MessageAuthorRole.Tool, message);
 		}
 
-		private void AddMessage(AuthorRole authorRole, string message)
+		private void AddMessage(MessageAuthorRole authorRole, string message)
 		{
 			var chatHistoryMessage = new Message
 			{

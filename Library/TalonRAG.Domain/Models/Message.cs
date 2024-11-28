@@ -10,7 +10,7 @@ namespace TalonRAG.Domain.Models
 		/// <summary>
 		/// The role of the author of this message.
 		/// </summary>
-		public AuthorRole AuthorRole { get; set; } = AuthorRole.System;
+		public MessageAuthorRole AuthorRole { get; set; } = MessageAuthorRole.System;
 
 		/// <summary>
 		/// The string content of the message.
