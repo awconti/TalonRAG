@@ -30,11 +30,11 @@ namespace TalonRAG.Application.Services
 			{
 				var maxArticleDate = DateTime.UtcNow.AddDays(-30).Date;
 
-				var articles = await GetArticles(maxArticleDate);
+				var articles = await GetArticlesAsync(maxArticleDate);
 
-				var articleEmbeddings = await GetEmbeddingsForArticleDescriptions(articles);
+				var articleEmbeddings = await GetEmbeddingsForArticleDescriptionsAsync(articles);
 
-				await BulkInsertEmbeddings(maxArticleDate, articleEmbeddings);
+				await BulkInsertEmbeddingsAsync(maxArticleDate, articleEmbeddings);
 			} 
 			catch (Exception ex)
 			{
@@ -42,7 +42,7 @@ namespace TalonRAG.Application.Services
 			}
 		}
 
-		private async Task<IList<NewsApiV2Article>> GetArticles(DateTime maxArticleDate)
+		private async Task<IList<NewsApiV2Article>> GetArticlesAsync(DateTime maxArticleDate)
 		{
 			var response = 
 				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>(
@@ -51,9 +51,9 @@ namespace TalonRAG.Application.Services
 			return response.Articles ?? [];
 		}
 
-		private async Task<IList<ArticleEmbedding>> GetEmbeddingsForArticleDescriptions(IList<NewsApiV2Article> articles)
+		private async Task<IList<ArticleEmbeddingRecord>> GetEmbeddingsForArticleDescriptionsAsync(IList<NewsApiV2Article> articles)
 		{
-			var articleEmbeddings = new List<ArticleEmbedding>();
+			var articleEmbeddings = new List<ArticleEmbeddingRecord>();
 			foreach (var article in articles)
 			{
 				if (article == null || article.Description == null) { continue; }
@@ -61,7 +61,7 @@ namespace TalonRAG.Application.Services
 				var embeddings = await _embeddingGenerator.GenerateEmbeddingsAsync([article.Description]);
 				var embedding = embeddings.FirstOrDefault();
 
-				var articleEmbedding = new ArticleEmbedding
+				var articleEmbedding = new ArticleEmbeddingRecord
 				{
 					Content = article.Description,
 					Embedding = embedding.ToArray()
@@ -73,7 +73,7 @@ namespace TalonRAG.Application.Services
 			return articleEmbeddings;
 		}
 
-		private async Task BulkInsertEmbeddings(DateTime maxArticleDate, IList<ArticleEmbedding> articleEmbeddings)
+		private async Task BulkInsertEmbeddingsAsync(DateTime maxArticleDate, IList<ArticleEmbeddingRecord> articleEmbeddings)
 		{
 			await _repository.DeleteAllEmbeddingsAsync(maxArticleDate);
 			await _repository.BulkInsertEmbeddingsAsync(articleEmbeddings);

@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents persisted embedded article desription content.
     /// </summary>
-    public class ArticleEmbedding
+    public class ArticleEmbeddingRecord
     {
         /// <summary>
         /// The unique database identifier for the article embedding.

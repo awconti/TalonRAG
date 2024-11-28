@@ -3,17 +3,17 @@
 namespace TalonRAG.Domain.Models
 {
 	/// <summary>
-	/// Model class for providing the history of a chat on behalf of the domain.
+	/// Model class representing a conversation or sequence of <see cref="Message" /> instances on behalf of the domain.
 	/// </summary>
-	public class ChatHistory
+	public class Conversation
 	{
 		/// <summary>
-		/// A list collection of <see cref="ChatHistoryMessage" />.
+		/// A list collection of <see cref="Message" />.
 		/// </summary>
-		public IList<ChatHistoryMessage> Messages { get; set; } = [];
+		public IList<Message> Messages { get; set; } = [];
 
 		/// <summary>
-		/// Adds a system message to collection of <see cref="ChatHistoryMessage" />.
+		/// Adds a system message to collection of <see cref="Message" />.
 		/// </summary>
 		/// <param name="message">
 		/// String representation of message.
@@ -24,7 +24,7 @@ namespace TalonRAG.Domain.Models
 		}
 
 		/// <summary>
-		/// Adds an assistant message to collection of <see cref="ChatHistoryMessage" />.
+		/// Adds an assistant message to collection of <see cref="Message" />.
 		/// </summary>
 		/// <param name="message">
 		/// String representation of message.
@@ -35,7 +35,7 @@ namespace TalonRAG.Domain.Models
 		}
 
 		/// <summary>
-		/// Adds an user message to collection of <see cref="ChatHistoryMessage" />.
+		/// Adds an user message to collection of <see cref="Message" />.
 		/// </summary>
 		/// <param name="message">
 		/// String representation of message.
@@ -46,7 +46,7 @@ namespace TalonRAG.Domain.Models
 		}
 
 		/// <summary>
-		/// Adds a tool message to collection of <see cref="ChatHistoryMessage" />.
+		/// Adds a tool message to collection of <see cref="Message" />.
 		/// </summary>
 		/// <param name="message">
 		/// String representation of message.
@@ -58,7 +58,7 @@ namespace TalonRAG.Domain.Models
 
 		private void AddMessage(AuthorRole authorRole, string message)
 		{
-			var chatHistoryMessage = new ChatHistoryMessage
+			var chatHistoryMessage = new Message
 			{
 				AuthorRole = authorRole,
 				Content = message

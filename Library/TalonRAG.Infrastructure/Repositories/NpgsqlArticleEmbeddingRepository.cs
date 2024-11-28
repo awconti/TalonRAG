@@ -37,8 +37,8 @@ namespace TalonRAG.Infrastructure.Repositories
 			await command.ExecuteNonQueryAsync();
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbedding})" />
-		public async Task InsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings)
+		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
+		public async Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings)
 		{
 			using var connection = await CreateConnection();
 
@@ -58,8 +58,8 @@ namespace TalonRAG.Infrastructure.Repositories
 			}
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbedding})" />
-		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings)
+		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
+		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings)
 		{
 			using var connection = await CreateConnection();
 
@@ -78,9 +78,9 @@ namespace TalonRAG.Infrastructure.Repositories
 		}
 
 		/// <inheritdoc cref="IArticleEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
-		public async Task<IList<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
+		public async Task<IList<ArticleEmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
 		{
-			var similarArticleEmbeddings = new List<ArticleEmbedding>();
+			var similarArticleEmbeddings = new List<ArticleEmbeddingRecord>();
 
 			await using var connection = await CreateConnection();
 
@@ -99,7 +99,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			await using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
-				similarArticleEmbeddings.Add(new ArticleEmbedding
+				similarArticleEmbeddings.Add(new ArticleEmbeddingRecord
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					Embedding = reader.GetFieldValue<Vector>(reader.GetOrdinal("article_embedding")).ToArray(),

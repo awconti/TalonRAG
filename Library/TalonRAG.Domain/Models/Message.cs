@@ -3,9 +3,9 @@
 namespace TalonRAG.Domain.Models
 {
 	/// <summary>
-	/// Model class which represents a single message in a <see cref="ChatHistory" /> instance on behalf of the domain.
+	/// Model class which represents a single message in a <see cref="Conversation" /> instance on behalf of the domain.
 	/// </summary>
-	public class ChatHistoryMessage
+	public class Message
 	{
 		/// <summary>
 		/// The role of the author of this message.

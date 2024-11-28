@@ -3,9 +3,9 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Domain.Models;
 using TalonRAG.Infrastructure.ConfigurationSettings;
 using TalonRAG.Infrastructure.Extensions;
-using ChatHistory = TalonRAG.Domain.Models.ChatHistory;
 
 namespace TalonRAG.Infrastructure.SemanticKernel
 {
@@ -19,8 +19,8 @@ namespace TalonRAG.Infrastructure.SemanticKernel
     {
         private readonly ChatCompletorConfigurationSettings _configurationSettings = options.Value;
 
-        /// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(ChatHistory)" />
-        public async Task<string?> GetChatMessageContentAsync(ChatHistory chatHistory)
+        /// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(Conversation)" />
+        public async Task<string?> GetChatMessageContentAsync(Conversation conversation)
         {
             if (_configurationSettings.IsMissing())
             {
@@ -36,14 +36,14 @@ namespace TalonRAG.Infrastructure.SemanticKernel
 
             var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
-			var kernelChatHistory = chatHistory.ToKernelChatHistory();
+			var chatHistory = conversation.ToChatHistory();
 
 			var executionSettings = new HuggingFacePromptExecutionSettings
             {
                 MaxTokens = 1200
             };
 
-            var chatMessageContent = await chatCompletionService.GetChatMessageContentAsync(kernelChatHistory, executionSettings);
+            var chatMessageContent = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings);
             return chatMessageContent?.Content;
         }
     }

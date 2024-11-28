@@ -22,7 +22,7 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="embeddings">
 		/// List collection of <see cref="ArticleEmbedding"/>.
 		/// </param>
-		Task InsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings);
+		Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
 
 		/// <summary>
 		/// Bulk inserts a list collection of <see cref="ArticleEmbedding"/>.
@@ -30,7 +30,7 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="embeddings">
 		/// List collection of <see cref="ArticleEmbedding"/>.
 		/// </param>
-		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbedding> embeddings);
+		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
 
 		/// <summary>
 		/// Retrieves similar embeddings.
@@ -41,6 +41,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="limit">
 		/// Number of embeddings to retrieve.
 		/// </param>
-		Task<IList<ArticleEmbedding>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
+		Task<IList<ArticleEmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
 	}
 }

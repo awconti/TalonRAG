@@ -1,9 +1,10 @@
 ﻿using Microsoft.SemanticKernel.ChatCompletion;
+using TalonRAG.Domain.Models;
 
 namespace TalonRAG.Infrastructure.Extensions
 {
 	/// <summary>
-	/// Extensions tailored to <see cref="Domain.Models.ChatHistory" /> domain model conversion.
+	/// Extensions tailored to <see cref="Conversation" /> domain model conversion.
 	/// </summary>
 	public static class ChatHistoryExtensions
 	{
@@ -11,30 +12,30 @@ namespace TalonRAG.Infrastructure.Extensions
 		/// Converts domain model to <see cref="ChatHistory" /> instance.
 		/// </summary>
 		/// <param name="chatHistory"></param>
-		public static ChatHistory ToKernelChatHistory(this Domain.Models.ChatHistory chatHistory)
+		public static ChatHistory ToChatHistory(this Conversation conversation)
 		{
 			var systemMessage = 
-				chatHistory.Messages.LastOrDefault(message => message.AuthorRole == Domain.Enums.AuthorRole.System);
+				conversation.Messages.LastOrDefault(message => message.AuthorRole == Domain.Enums.AuthorRole.System);
 
-			var kernelChatHistory = new ChatHistory(systemMessage?.Content);
-			foreach (var message in chatHistory.Messages)
+			var chatHistory = new ChatHistory(systemMessage?.Content);
+			foreach (var message in conversation.Messages)
 			{
 				switch(message.AuthorRole)
 				{
 					case Domain.Enums.AuthorRole.Tool:
-						kernelChatHistory.AddMessage(AuthorRole.Tool, message.Content);
+						chatHistory.AddMessage(AuthorRole.Tool, message.Content);
 						break;
 					case Domain.Enums.AuthorRole.User:
-						kernelChatHistory.AddUserMessage(message.Content);
+						chatHistory.AddUserMessage(message.Content);
 						break;
 					case Domain.Enums.AuthorRole.Assistant:
-						kernelChatHistory.AddAssistantMessage(message.Content);
+						chatHistory.AddAssistantMessage(message.Content);
 						break;
 				}
 
 			}
 
-			return kernelChatHistory;
+			return chatHistory;
         }
 	}
 }

@@ -1,7 +1,7 @@
 ﻿namespace TalonRAG.Domain.Interfaces
 {
 	/// <summary>
-	/// Interface for classes leveraging external APIs to retrieve news articles to embed on behalf of the domain.
+	/// Interface for classes leveraging external APIs to retrieve news articles on behalf of the domain.
 	/// </summary>
 	public interface IExternalArticleApiClient
 	{

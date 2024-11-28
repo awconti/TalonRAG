@@ -3,7 +3,7 @@
 namespace TalonRAG.Domain.Enums
 {
 	/// <summary>
-	/// The role of the author of a <see cref="ChatHistoryMessage" />.
+	/// The role of the author of a <see cref="Message" />.
 	/// </summary>
 	public enum AuthorRole
 	{

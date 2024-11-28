@@ -33,7 +33,7 @@ namespace TalonRAG.Application.Services
 		{
 			try
 			{
-				var chatHistory = new ChatHistory();
+				var chatHistory = new Conversation();
 				chatHistory.AddSystemMessage(SYSTEM_MESSAGE);
 
 				while (true)
@@ -49,14 +49,14 @@ namespace TalonRAG.Application.Services
 						break;
 					}
 
-					var inputEmbedding = await GenerateEmbeddingForInput(userInput);
-					var similarArticleEmbeddings = await GetSimilarArticleEmbeddings(inputEmbedding);
+					var inputEmbedding = await GenerateEmbeddingForInputAsync(userInput);
+					var similarArticleEmbeddings = await GetSimilarArticleEmbeddingsAsync(inputEmbedding);
 
 					var toolMessage = string.Join(", ", similarArticleEmbeddings.Select(article => article.Content));
 					chatHistory.AddToolMessage(toolMessage);
 					chatHistory.AddUserMessage(userInput);
 
-					var content = await GenerateChatMessageContent(chatHistory);
+					var content = await GenerateChatMessageContentAsync(chatHistory);
 					chatHistory.AddAssistantMessage(content ?? "");
 
 					Console.WriteLine($"TalonRAG: {content}");
@@ -74,18 +74,18 @@ namespace TalonRAG.Application.Services
 			}
 		}
 
-		private async Task<IList<float>> GenerateEmbeddingForInput(string input)
+		private async Task<IList<float>> GenerateEmbeddingForInputAsync(string input)
 		{
 			var embeddings = await _embeddingGenerator.GenerateEmbeddingsAsync([input]);
 			return embeddings.FirstOrDefault().ToArray();
 		}
 
-		private async Task<IEnumerable<ArticleEmbedding>> GetSimilarArticleEmbeddings(IList<float> embedding)
+		private async Task<IEnumerable<ArticleEmbeddingRecord>> GetSimilarArticleEmbeddingsAsync(IList<float> embedding)
 		{
 			return await _repository.GetSimilarEmbeddingsAsync([.. embedding]);
 		}
 
-		private async Task<string?> GenerateChatMessageContent(ChatHistory chatHistory)
+		private async Task<string?> GenerateChatMessageContentAsync(Conversation chatHistory)
 		{
 			return await _chatCompletor.GetChatMessageContentAsync(chatHistory);
 		}
