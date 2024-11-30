@@ -47,7 +47,7 @@ namespace TalonRAG.Application.Registrars
 			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
-			services.AddTransient<IConsoleAppService, EtlConsoleAppService>();
+			services.AddTransient<IConsoleAppService, EtlAppService>();
 		}
 	}
 }
