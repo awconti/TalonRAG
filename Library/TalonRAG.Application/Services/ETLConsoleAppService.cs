@@ -12,7 +12,7 @@ namespace TalonRAG.Application.Services
 	/// <param name="newsApiClient">
 	/// <see cref="IExternalArticleApiClient" />.
 	/// </param>
-    public class ETLConsoleAppService(
+    public class EtlConsoleAppService(
 		IArticleEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
 	{
 		private readonly IArticleEmbeddingService _embeddingService = embeddingService;
