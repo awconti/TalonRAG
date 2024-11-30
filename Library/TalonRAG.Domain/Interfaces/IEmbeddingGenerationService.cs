@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Interface for classes seeking to implement embedding generation services on behalf of the domain.
 	/// </summary>
-	public interface IEmbeddingGenerator
+	public interface IEmbeddingGenerationService
 	{
 		/// <summary>
 		/// Async method to generate embeddings via a list of strings.

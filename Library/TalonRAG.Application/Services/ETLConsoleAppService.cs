@@ -1,5 +1,4 @@
 ﻿using TalonRAG.Application.DataTransferObjects;
-using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
 
 namespace TalonRAG.Application.Services
@@ -7,20 +6,16 @@ namespace TalonRAG.Application.Services
     /// <summary>
     /// ETL console application service class implementation of <see cref="IConsoleAppService" />.
     /// </summary>
-    /// <param name="embeddingGenerator">
-    /// <see cref="IEmbeddingGenerator" />.
-    /// </param>
-    /// <param name="repository">
-    /// <see cref="IArticleEmbeddingRepository" />.
+    /// <param name="embeddingService">
+    /// <see cref="IArticleEmbeddingService" />.
     /// </param>
 	/// <param name="newsApiClient">
 	/// <see cref="IExternalArticleApiClient" />.
 	/// </param>
     public class ETLConsoleAppService(
-		IEmbeddingGenerator embeddingGenerator, IArticleEmbeddingRepository repository, IExternalArticleApiClient newsApiClient) : IConsoleAppService
+		IArticleEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
 	{
-		private readonly IEmbeddingGenerator _embeddingGenerator = embeddingGenerator;
-		private readonly IArticleEmbeddingRepository _repository = repository;
+		private readonly IArticleEmbeddingService _embeddingService = embeddingService;
 		private readonly IExternalArticleApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
@@ -28,13 +23,12 @@ namespace TalonRAG.Application.Services
 		{
 			try
 			{
-				var maxArticleDate = DateTime.UtcNow.AddDays(-30).Date;
+				var maxArticleDate = DateTime.UtcNow.AddDays(-31).Date;
 
-				var articles = await GetArticlesAsync(maxArticleDate);
+				var articles = await GetNewsApiArticlesAsync(maxArticleDate);
+				var articleDescriptions = articles.Select(article => article.Description).ToList();
 
-				var articleEmbeddings = await GetEmbeddingsForArticleDescriptionsAsync(articles);
-
-				await BulkInsertEmbeddingsAsync(maxArticleDate, articleEmbeddings);
+				await _embeddingService.CreateEmbeddingsForArticleDescriptionsAsync(articleDescriptions, maxArticleDate);
 			} 
 			catch (Exception ex)
 			{
@@ -42,41 +36,12 @@ namespace TalonRAG.Application.Services
 			}
 		}
 
-		private async Task<IList<NewsApiV2Article>> GetArticlesAsync(DateTime maxArticleDate)
+		private async Task<IList<NewsApiV2Article>> GetNewsApiArticlesAsync(DateTime maxArticleDate)
 		{
 			var response = 
-				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>(
-					$"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
+				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
 
 			return response.Articles ?? [];
-		}
-
-		private async Task<IList<ArticleEmbeddingRecord>> GetEmbeddingsForArticleDescriptionsAsync(IList<NewsApiV2Article> articles)
-		{
-			var articleEmbeddings = new List<ArticleEmbeddingRecord>();
-			foreach (var article in articles)
-			{
-				if (article == null || article.Description == null) { continue; }
-
-				var embeddings = await _embeddingGenerator.GenerateEmbeddingsAsync([article.Description]);
-				var embedding = embeddings.FirstOrDefault();
-
-				var articleEmbedding = new ArticleEmbeddingRecord
-				{
-					Content = article.Description,
-					Embedding = embedding.ToArray()
-				};
-
-				articleEmbeddings.Add(articleEmbedding);
-			}
-
-			return articleEmbeddings;
-		}
-
-		private async Task BulkInsertEmbeddingsAsync(DateTime maxArticleDate, IList<ArticleEmbeddingRecord> articleEmbeddings)
-		{
-			await _repository.DeleteAllEmbeddingsAsync(maxArticleDate);
-			await _repository.BulkInsertEmbeddingsAsync(articleEmbeddings);
 		}
 	}
 }

@@ -15,22 +15,22 @@ namespace TalonRAG.Infrastructure.Extensions
 		/// <param name="chatHistory"></param>
 		public static ChatHistory ToChatHistory(this Conversation conversation)
 		{
-			var systemMessage = 
-				conversation.Messages.LastOrDefault(message => message.AuthorRole == MessageAuthorRole.System);
+			var systemMessageRecord = 
+				conversation.MessageRecords.LastOrDefault(messageRecord => messageRecord.MessageAuthorRole == MessageAuthorRole.System);
 
-			var chatHistory = new ChatHistory(systemMessage?.Content);
-			foreach (var message in conversation.Messages)
+			var chatHistory = new ChatHistory(systemMessageRecord?.Content);
+			foreach (var messageRecord in conversation.MessageRecords)
 			{
-				switch(message.AuthorRole)
+				switch(messageRecord.MessageAuthorRole)
 				{
 					case MessageAuthorRole.Tool:
-						chatHistory.AddMessage(AuthorRole.Tool, message.Content);
+						chatHistory.AddMessage(AuthorRole.Tool, messageRecord.Content);
 						break;
 					case MessageAuthorRole.User:
-						chatHistory.AddUserMessage(message.Content);
+						chatHistory.AddUserMessage(messageRecord.Content);
 						break;
 					case MessageAuthorRole.Assistant:
-						chatHistory.AddAssistantMessage(message.Content);
+						chatHistory.AddAssistantMessage(messageRecord.Content);
 						break;
 				}
 

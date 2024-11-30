@@ -30,17 +30,17 @@ namespace TalonRAG.Infrastructure.Repositories
 		}
 
 		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
-		public async Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings)
+		public async Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords)
 		{
-			foreach (var embedding in embeddings)
+			foreach (var record in embeddingRecords)
 			{
 				var sql =
 					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content);";
 
 				var parameters = new Dictionary<string, object>
 				{
-					{ "@Embedding", new Vector(embedding.Embedding) },
-					{ "@Content", embedding.Content }
+					{ "@Embedding", new Vector(record.Embedding) },
+					{ "@Content", record.Content }
 				};
 
 				await ExecuteNonQueryAsync(sql, parameters);
@@ -48,18 +48,18 @@ namespace TalonRAG.Infrastructure.Repositories
 		}
 
 		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
-		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings)
+		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords)
 		{
 			var command =
 				"COPY article_embeddings (article_embedding, article_content) FROM STDIN (FORMAT BINARY)";
 
 			await BinaryImportAsync(command, async writer =>
 			{
-				foreach (var embedding in embeddings)
+				foreach (var record in embeddingRecords)
 				{
 					await writer.StartRowAsync();
-					writer.Write(new Vector(embedding.Embedding));
-					writer.Write(embedding.Content);
+					writer.Write(new Vector(record.Embedding));
+					writer.Write(record.Content);
 				}
 			});
 		}

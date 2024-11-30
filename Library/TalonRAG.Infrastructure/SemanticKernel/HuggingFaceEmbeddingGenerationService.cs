@@ -8,16 +8,16 @@ using TalonRAG.Infrastructure.Extensions;
 namespace TalonRAG.Infrastructure.SemanticKernel
 {
     /// <summary>
-    /// HuggingFace specific implementation of <see cref="IEmbeddingGenerator"/>.
+    /// HuggingFace specific implementation of <see cref="IEmbeddingGenerationService"/>.
     /// </summary>
     /// <param name="options">
     /// <see cref="IOptions{EmbeddingGeneratorConfigurationSettings}"/>.
     /// </param>
-    public class HuggingFaceEmbeddingGenerator(IOptions<EmbeddingGeneratorConfigurationSettings> options) : IEmbeddingGenerator
+    public class HuggingFaceEmbeddingGenerationService(IOptions<EmbeddingGenerationConfigurationSettings> options) : IEmbeddingGenerationService
     {
-        private readonly EmbeddingGeneratorConfigurationSettings _configurationSettings = options.Value;
+        private readonly EmbeddingGenerationConfigurationSettings _configurationSettings = options.Value;
 
-        /// <inheritdoc cref="IEmbeddingGenerator.GenerateEmbeddingsAsync(IList{string})"/>
+        /// <inheritdoc cref="IEmbeddingGenerationService.GenerateEmbeddingsAsync(IList{string})"/>
         public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(IList<string> text)
         {
             if (_configurationSettings.IsMissing())

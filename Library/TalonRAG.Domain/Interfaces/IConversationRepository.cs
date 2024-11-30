@@ -8,12 +8,20 @@ namespace TalonRAG.Domain.Interfaces
 	public interface IConversationRepository
 	{
 		/// <summary>
-		/// Inserts a list collection of <see cref="ConversationRecord" />.
+		/// Persists an instance of <see cref="ConversationRecord" />.
 		/// </summary>
-		/// <param name="conversations">
-		/// List collection of <see cref="ConversationRecord" />.
+		/// <param name="conversationRecord">
+		/// Instance of <see cref="ConversationRecord" /> to create.
 		/// </param>
-		Task InsertConversationsAsync(IList<ConversationRecord> conversations);
+		Task<int> InsertConversationAsync(ConversationRecord conversationRecord);
+
+		/// <summary>
+		/// Retrieves a conversation by ID.
+		/// </summary>
+		/// <param name="conversationId">
+		/// The unique database identifier of the conversion.
+		/// </param>
+		Task<ConversationRecord?> GetConversationByIdAsync(int conversationId);
 
 		/// <summary>
 		/// Retrieves a list collection of conversations by user ID.

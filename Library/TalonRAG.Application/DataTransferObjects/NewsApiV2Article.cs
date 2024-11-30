@@ -11,6 +11,6 @@ namespace TalonRAG.Application.DataTransferObjects
         /// Represents description field in JSON response.
         /// </summary>
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public required string Description { get; set; }
     }
 }

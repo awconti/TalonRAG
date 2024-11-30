@@ -14,23 +14,20 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlMessageRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IMessageRepository
 	{
-		/// <inheritdoc cref="IMessageRepository.InsertMessagesAsync(IList{MessageRecord})" />
-		public async Task InsertMessagesAsync(IList<MessageRecord> messages)
+		/// <inheritdoc cref="IMessageRepository.InsertMessageAsync(MessageRecord)" />
+		public async Task<int> InsertMessageAsync(MessageRecord messageRecord)
 		{
-			foreach (var message in messages)
+			var sql =
+				"INSERT INTO messages (conversation_id, author_role, message_content) VALUES (@ConversationId, @AuthorRole, @MessageContent) RETURNING id;";
+
+			var parameters = new Dictionary<string, object>
 			{
-				var sql =
-					"INSERT INTO messages (conversation_id, author_role, message_content) VALUES (@ConversationId, @AuthorRole, @MessageContent);";
+				{ "@ConversationId", messageRecord.ConversationId},
+				{ "@AuthorRole", (int) messageRecord.MessageAuthorRole },
+				{ "@MessageContent", messageRecord.Content }
+			};
 
-				var parameters = new Dictionary<string, object>
-				{
-					{ "@ConversationId", message.ConversationId },
-					{ "@AuthorRole", message.MessageAuthorRole },
-					{ "@MessageContent", message.Content }
-				};
-
-				await ExecuteNonQueryAsync(sql, parameters);
-			}
+			return await ExecuteScalarAsync<int>(sql, parameters);
 		}
 
 		/// <inheritdoc cref="IMessageRepository.GetMessagesByConversationIdAsync(int)" />
@@ -53,7 +50,7 @@ namespace TalonRAG.Infrastructure.Repositories
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					ConversationId = reader.GetInt32(reader.GetOrdinal("conversation_id")),
-					MessageAuthorRole = reader.GetFieldValue<MessageAuthorRole>(reader.GetOrdinal("author_role")),
+					MessageAuthorRole = (MessageAuthorRole) reader.GetInt32(reader.GetOrdinal("author_role")),
 					Content = reader.GetString(reader.GetOrdinal("message_content")),
 					CreateDate = reader.GetDateTime(reader.GetOrdinal("create_date"))
 				},

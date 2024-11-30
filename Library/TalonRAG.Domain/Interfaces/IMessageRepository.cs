@@ -1,4 +1,5 @@
 ﻿using TalonRAG.Domain.Entities;
+using TalonRAG.Domain.Enums;
 
 namespace TalonRAG.Domain.Interfaces
 {
@@ -8,12 +9,18 @@ namespace TalonRAG.Domain.Interfaces
 	public interface IMessageRepository
 	{
 		/// <summary>
-		/// Inserts a list collection of <see cref="MessageRecord" />.
+		/// Persists an instance of <see cref="MessageRecord" />.
 		/// </summary>
-		/// <param name="messages">
-		/// List collection of <see cref="MessageRecord" />.
+		/// <param name="conversationId">
+		/// The unique database identifier of the conversation the message belongs to.
 		/// </param>
-		Task InsertMessagesAsync(IList<MessageRecord> messages);
+		/// <param name="authorRole">
+		/// The role of the author of this message.
+		/// </param>
+		/// <param name="content">
+		/// The content of the message.
+		/// </param>
+		Task<int> InsertMessageAsync(MessageRecord messageRecord);
 
 		/// <summary>
 		/// Retrieves a list collection of messages by conversation ID.

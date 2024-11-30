@@ -13,21 +13,45 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlConversationRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IConversationRepository
 	{
-		/// <inheritdoc cref="IConversationRepository.InsertConversationsAsync(IList{ConversationRecord})" />
-		public async Task InsertConversationsAsync(IList<ConversationRecord> conversations)
+		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(int)" />
+		public async Task<int> InsertConversationAsync(ConversationRecord conversationRecord)
 		{
-			foreach (var conversation in conversations)
+			var sql =
+				"INSERT INTO conversations (user_id) VALUES (@UserId) RETURNING id;";
+
+			var parameters = new Dictionary<string, object>
 			{
-				var sql =
-					"INSERT INTO conversations (user_id) VALUES (@UserId);";
+				{ "@UserId", conversationRecord.UserId }
+			};
 
-				var parameters = new Dictionary<string, object>
+			return await ExecuteScalarAsync<int>(sql, parameters);
+		}
+
+		/// <inheritdoc cref="IConversationRepository.GetConversationByIdAsync(int)" />
+		public async Task<ConversationRecord?> GetConversationByIdAsync(int conversationId)
+		{
+			string sql = $@"
+                SELECT id, user_id, create_date
+				FROM conversations
+				WHERE id = @ConversationId
+			";
+
+			var parameters = new Dictionary<string, object>
+			{
+				{ "@ConversationId", conversationId }
+			};
+
+			var conversationRecords = await ExecuteReaderAsync(
+				sql,
+				reader => new ConversationRecord
 				{
-					{ "@UserId", conversation.UserId }
-				};
+					Id = reader.GetInt32(reader.GetOrdinal("id")),
+					UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
+					CreateDate = reader.GetDateTime(reader.GetOrdinal("create_date"))
+				},
+				parameters);
 
-				await ExecuteNonQueryAsync(sql, parameters);
-			}
+			return conversationRecords.FirstOrDefault();
 		}
 
 		/// <inheritdoc cref="IConversationRepository.GetConversationsByUserIdAsync(int)" />

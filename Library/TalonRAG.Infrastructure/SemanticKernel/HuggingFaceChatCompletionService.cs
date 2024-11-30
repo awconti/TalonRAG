@@ -2,25 +2,25 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.HuggingFace;
-using TalonRAG.Domain.Interfaces;
 using TalonRAG.Domain.Models;
 using TalonRAG.Infrastructure.ConfigurationSettings;
 using TalonRAG.Infrastructure.Extensions;
+using IChatCompletionService = TalonRAG.Domain.Interfaces.IChatCompletionService;
 
 namespace TalonRAG.Infrastructure.SemanticKernel
 {
     /// <summary>
-    /// HuggingFace specific implementation of <see cref="IChatCompletor"/>.
+    /// HuggingFace specific implementation of <see cref="IChatCompletionService"/>.
     /// </summary>
     /// <param name="options">
-    /// <see cref="IOptions{ChatCompletorConfigurationSettings}"/>.
+    /// <see cref="IOptions{ChatCompletionConfigurationSettings}"/>.
     /// </param>
-    public class HuggingFaceChatCompletor(IOptions<ChatCompletorConfigurationSettings> options) : IChatCompletor
+    public class HuggingFaceChatCompletionService(IOptions<ChatCompletionConfigurationSettings> options) : IChatCompletionService
     {
-        private readonly ChatCompletorConfigurationSettings _configurationSettings = options.Value;
+        private readonly ChatCompletionConfigurationSettings _configurationSettings = options.Value;
 
-        /// <inheritdoc cref="IChatCompletor.GetChatMessageContentAsync(Conversation)" />
-        public async Task<string?> GetChatMessageContentAsync(Conversation conversation)
+        /// <inheritdoc cref="IChatCompletionService.GetChatMessageContentAsync(Conversation)" />
+        public async Task<string> GetChatMessageContentAsync(Conversation conversation)
         {
             if (_configurationSettings.IsMissing())
             {
@@ -34,7 +34,7 @@ namespace TalonRAG.Infrastructure.SemanticKernel
 
             var kernel = builder.Build();
 
-            var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+            var chatCompletionService = kernel.GetRequiredService<Microsoft.SemanticKernel.ChatCompletion.IChatCompletionService>();
 
 			var chatHistory = conversation.ToChatHistory();
 
@@ -44,7 +44,7 @@ namespace TalonRAG.Infrastructure.SemanticKernel
             };
 
             var chatMessageContent = await chatCompletionService.GetChatMessageContentAsync(chatHistory, executionSettings);
-            return chatMessageContent?.Content;
+            return chatMessageContent.Content ?? string.Empty;
         }
     }
 }

@@ -16,21 +16,21 @@ namespace TalonRAG.Domain.Interfaces
 		Task DeleteAllEmbeddingsAsync(DateTime? createDate = null);
 
 		/// <summary>
-		/// Inserts a list collection of <see cref="ArticleEmbeddingRecord"/>.
+		/// Inserts a list collection of <see cref="ArticleEmbeddingRecord" />.
 		/// TODO: Replace w/ batched bulk insert.
 		/// </summary>
-		/// <param name="embeddings">
-		/// List collection of <see cref="ArticleEmbeddingRecord"/>.
+		/// <param name="embeddingRecords">
+		/// List collection of <see cref="ArticleEmbeddingRecord" />.
 		/// </param>
-		Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
+		Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords);
 
 		/// <summary>
-		/// Bulk inserts a list collection of <see cref="ArticleEmbeddingRecord"/>.
+		/// Bulk inserts a list collection of <see cref="ArticleEmbeddingRecord" />.
 		/// </summary>
-		/// <param name="embeddings">
-		/// List collection of <see cref="ArticleEmbeddingRecord"/>.
+		/// <param name="embeddingRecords">
+		/// List collection of <see cref="ArticleEmbeddingRecord" />.
 		/// </param>
-		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddings);
+		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords);
 
 		/// <summary>
 		/// Retrieves similar embeddings.
