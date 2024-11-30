@@ -8,12 +8,12 @@ namespace TalonRAG.Domain.Models
 	public class Conversation
 	{
 		/// <summary>
-		/// Represents the conversation.
+		/// Represents the persisted conversation.
 		/// </summary>
 		public required ConversationRecord ConversationRecord;
 
 		/// <summary>
-		/// Represents a collection of messages for the conversation.
+		/// Represents a collection of persisted messages for the conversation.
 		/// </summary>
 		public IList<MessageRecord> MessageRecords { get; set; } = [];
 	}

@@ -1,6 +1,4 @@
-﻿using TalonRAG.Domain.Enums;
-using TalonRAG.Domain.Interfaces;
-using TalonRAG.Domain.Models;
+﻿using TalonRAG.Domain.Interfaces;
 
 namespace TalonRAG.Application.Services
 {

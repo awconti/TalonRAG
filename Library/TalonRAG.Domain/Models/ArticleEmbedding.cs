@@ -7,6 +7,9 @@ namespace TalonRAG.Domain.Models
 	/// </summary>
 	public class ArticleEmbedding
 	{
+		/// <summary>
+		/// Representes the persisted article embedding.
+		/// </summary>
 		public required ArticleEmbeddingRecord ArticleEmbeddingRecord { get; set; }
 	}
 }
