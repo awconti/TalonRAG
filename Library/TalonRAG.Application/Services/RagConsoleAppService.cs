@@ -8,7 +8,7 @@ namespace TalonRAG.Application.Services
 	/// <param name="conversationManagerService"> 
 	/// <see cref="IConversationManagerService" />.
 	/// </param>
-    public class RagAppService(IConversationManagerService conversationManagerService) : IConsoleAppService
+    public class RagConsoleAppService(IConversationManagerService conversationManagerService) : IConsoleAppService
 	{
 		private readonly IConversationManagerService _conversationManagerService = conversationManagerService;
 

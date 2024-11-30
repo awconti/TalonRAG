@@ -39,7 +39,7 @@ namespace TalonRAG.Application.Registrars
 			services.AddTransient<IConversationManagerService, ConversationManagerService>();
 			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
-			services.AddTransient<IConsoleAppService, RagAppService>();
+			services.AddTransient<IConsoleAppService, RagConsoleAppService>();
 		}
 	}
 }
