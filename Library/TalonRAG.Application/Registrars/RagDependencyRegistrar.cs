@@ -36,7 +36,7 @@ namespace TalonRAG.Application.Registrars
 			services.AddTransient<IMessageRepository, NpgsqlMessageRepository>();
 			services.AddTransient<IConversationRepository, NpgsqlConversationRepository>();
 			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
-			services.AddTransient<IConversationManagerService, ConversationManagerService>();
+			services.AddTransient<IConversationService, ArticleConversationService>();
 			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
 			services.AddTransient<IConsoleAppService, RagConsoleAppService>();

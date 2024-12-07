@@ -23,7 +23,7 @@ namespace TalonRAG.Application.Services
 		{
 			try
 			{
-				var maxArticleDate = DateTime.UtcNow.AddDays(-31).Date;
+				var maxArticleDate = DateTime.UtcNow.AddDays(-30).Date;
 
 				var articles = await GetNewsApiArticlesAsync(maxArticleDate);
 				var articleDescriptions = articles.Select(article => article.Description).ToList();

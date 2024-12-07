@@ -5,12 +5,12 @@ namespace TalonRAG.Application.Services
     /// <summary>
     /// RAG console application service class implementation of <see cref="IConsoleAppService" />.
     /// </summary>
-	/// <param name="conversationManagerService"> 
-	/// <see cref="IConversationManagerService" />.
+	/// <param name="conversationService"> 
+	/// <see cref="IConversationService" />.
 	/// </param>
-    public class RagConsoleAppService(IConversationManagerService conversationManagerService) : IConsoleAppService
+    public class RagConsoleAppService(IConversationService conversationService) : IConsoleAppService
 	{
-		private readonly IConversationManagerService _conversationManagerService = conversationManagerService;
+		private readonly IConversationService _conversationService = conversationService;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()
@@ -18,7 +18,7 @@ namespace TalonRAG.Application.Services
 			try
 			{
 				var userId = 1;
-				var conversationId = await _conversationManagerService.StartConversationAsync(userId);
+				var conversation = await _conversationService.StartConversationAsync(userId);
 
 				while (true)
 				{
@@ -34,7 +34,9 @@ namespace TalonRAG.Application.Services
 						break;
 					}
 
-					var assistantMessage = await _conversationManagerService.ContinueConversationAsync(conversationId, userMessage);
+					conversation = 
+						await _conversationService.ContinueConversationAsync(conversation.ConversationRecord.Id, userMessage);
+					var assistantMessage = conversation.MessageRecords.Last().Content;
 
 					Console.WriteLine($"TalonRAG: {assistantMessage}");
 

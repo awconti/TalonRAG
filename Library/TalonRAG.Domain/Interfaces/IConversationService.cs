@@ -1,9 +1,11 @@
-﻿namespace TalonRAG.Domain.Interfaces
+﻿using TalonRAG.Domain.Models;
+
+namespace TalonRAG.Domain.Interfaces
 {
 	/// <summary>
 	/// Interface for classes seeking to manage a conversation on behalf of the domain.
 	/// </summary>
-	public interface IConversationManagerService
+	public interface IConversationService
 	{
 		/// <summary>
 		/// Creates a conversation for a specific user.
@@ -11,7 +13,7 @@
 		/// <param name="userId">
 		/// The unique database identifier of the user.
 		/// </param>
-		Task<int> StartConversationAsync(int userId);
+		Task<Conversation> StartConversationAsync(int userId);
 
 		/// <summary>
 		/// Continues a specific conversation on behalf of the user.
@@ -22,6 +24,6 @@
 		/// <param name="userMessageContent">
 		/// The content of the user's message.
 		/// </param>
-		Task<string> ContinueConversationAsync(int conversationId, string userMessageContent);
+		Task<Conversation> ContinueConversationAsync(int conversationId, string userMessageContent);
 	}
 }

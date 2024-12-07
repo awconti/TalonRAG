@@ -13,7 +13,7 @@ internal class Program
 			{
 				config.AddJsonFile("./Properties/appSettings.json", optional: false, reloadOnChange: true);
 			})
-			.ConfigureServices(RagDependencyRegistrar.Register)
+			.ConfigureServices(EtlDependencyRegistrar.Register)
 			.Build();
 
 		// Resolve and run the application

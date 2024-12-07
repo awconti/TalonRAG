@@ -1,5 +1,4 @@
 ﻿using TalonRAG.Domain.Entities;
-using TalonRAG.Domain.Enums;
 
 namespace TalonRAG.Domain.Interfaces
 {
