@@ -13,7 +13,7 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlConversationRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IConversationRepository
 	{
-		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(int)" />
+		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(ConversationRecord)" />
 		public async Task<int> InsertConversationAsync(ConversationRecord conversationRecord)
 		{
 			var sql =

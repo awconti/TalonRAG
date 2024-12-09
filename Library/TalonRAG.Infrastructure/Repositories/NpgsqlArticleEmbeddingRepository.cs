@@ -20,10 +20,10 @@ namespace TalonRAG.Infrastructure.Repositories
 			var sql = "DELETE FROM article_embeddings ";
 
 			var parameters = new Dictionary<string, object>();
-			if (createDate != null)
+			if (createDate.HasValue)
 			{
-				sql += "WHERE create_date AT TIME ZONE 'UTC' > @CreateDate;";
-				parameters.Add("@CreateDate", createDate);
+				sql += "WHERE create_date AT >= @CreateDate;";
+				parameters.Add("@CreateDate", createDate.Value.Date);
 			}
 
 			await ExecuteNonQueryAsync(sql, parameters);
@@ -70,7 +70,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			string sql = $@"
                 SELECT id, article_embedding, article_content
 				FROM article_embeddings
-				ORDER BY article_embedding <#> @Embedding
+				ORDER BY article_embedding <=> @Embedding
 				LIMIT @Limit;
 			";
 
