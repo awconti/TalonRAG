@@ -22,7 +22,7 @@ namespace TalonRAG.Infrastructure.Repositories
 			var parameters = new Dictionary<string, object>();
 			if (createDate.HasValue)
 			{
-				sql += "WHERE create_date AT >= @CreateDate;";
+				sql += "WHERE create_date >= @CreateDate;";
 				parameters.Add("@CreateDate", createDate.Value.Date);
 			}
 
