@@ -1,5 +1,6 @@
 ﻿using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Enums;
+using TalonRAG.Domain.Extensions;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Domain.Models;
 
@@ -15,7 +16,7 @@ namespace TalonRAG.Domain.Services
 	/// <see cref="IMessageRepository" />.
 	/// </param>
 	/// <param name="articleEmbeddingService">
-	/// <see cref="IArticleEmbeddingService" />.
+	/// <see cref="IEmbeddingService" />.
 	/// </param>
 	/// <param name="chatCompletionService">
 	/// <see cref="IChatCompletionService" />.
@@ -23,7 +24,7 @@ namespace TalonRAG.Domain.Services
 	public class ArticleConversationService(
 		IConversationRepository conversationRepository, 
 		IMessageRepository messageRepository, 
-		IArticleEmbeddingService articleEmbeddingService, 
+		IEmbeddingService articleEmbeddingService, 
 		IChatCompletionService chatCompletionService) : IConversationService
 	{
 		private const string SYSTEM_MESSAGE_CONTENT = $@"
@@ -34,63 +35,74 @@ namespace TalonRAG.Domain.Services
 
 		private readonly IConversationRepository _conversationRepository = conversationRepository;
 		private readonly IMessageRepository _messageRepository = messageRepository;
-		private readonly IArticleEmbeddingService _articleEmbeddingService = articleEmbeddingService;
+		private readonly IEmbeddingService _articleEmbeddingService = articleEmbeddingService;
 		private readonly IChatCompletionService _chatCompletionService = chatCompletionService;
 
+		/// <inheritdoc cref="IConversationService.GetConversationByIdAsync(int)"
+		public async Task<Conversation?> GetConversationByIdAsync(int id) => await GetExistingConversationByIdAsync(id);
+
 		/// <inheritdoc cref="IConversationService.StartConversationAsync(int)" />
-		public async Task<Conversation> StartConversationAsync(int userId)
+		public async Task<Conversation?> StartConversationAsync(int userId)
 		{
 			// Create conversation.
-			var conversationId = await _conversationRepository.InsertConversationAsync(
-				new ConversationRecord { UserId = userId });
+			var conversationRecord = new ConversationRecord { UserId = userId };
+			var conversationId = await _conversationRepository.InsertConversationAsync(conversationRecord);
 
-			// Create intiail system message, add to conversation.
-			await _messageRepository.InsertMessageAsync(
-				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.System, Content = SYSTEM_MESSAGE_CONTENT });
+			// Create initial system message, add to conversation.
+			var systemMessageRecord = 
+				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.System, Content = SYSTEM_MESSAGE_CONTENT };
+			await _messageRepository.InsertMessageAsync(systemMessageRecord);
 
 			// Retrieve conversation and corresponding message records and return started conversation object.
-			var conversationRecord = 
-				await _conversationRepository.GetConversationByIdAsync(conversationId) ?? throw new Exception("Conversation record could not be found after creation, could not start."); ;
-			var messageRecords = await _messageRepository.GetMessagesByConversationIdAsync(conversationId);
-
-			return new Conversation { ConversationRecord = conversationRecord, MessageRecords = messageRecords };
+			return await GetExistingConversationByIdAsync(conversationId);
 		}
 
 		/// <inheritdoc cref="IConversationService.ContinueConversationAsync(int, string)" />
-		public async Task<Conversation> ContinueConversationAsync(int conversationId, string userMessageContent)
+		public async Task<Conversation?> ContinueConversationAsync(int conversationId, string userMessageContent)
 		{
-			// Retrieve existing conversation record.
-			var conversationRecord =
-				await _conversationRepository.GetConversationByIdAsync(conversationId) ?? throw new Exception("Conversation record could not be found, could not continue.");
+			// Get existing conversation by ID.
+			var conversation = await GetConversationByIdAsync(conversationId);
+			if (conversation == null) { return null; }
 
 			// Retrieve similar article embeddings based on user message content.
-			var articleEmbeddings = await _articleEmbeddingService.GetSimilarArticleEmbeddingsForMessageContentAsync(userMessageContent);
+			var articleEmbeddings = await _articleEmbeddingService.GetSimilarEmbeddingsFromContentAsync(userMessageContent);
 
 			// Create comma delimited string of similar article description content (to be used as tool message content).
-			var toolMessageContent = string.Join(", ", articleEmbeddings.Select(embedding => embedding.ArticleEmbeddingRecord.Content));
+			var toolMessageContent = string.Join(", ", articleEmbeddings.Select(embedding => embedding.Content));
 
-			// Create message records for user and tool messages.
-			await _messageRepository.InsertMessageAsync(
-				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.Tool, Content = toolMessageContent });
-			await _messageRepository.InsertMessageAsync(
-				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.User, Content = userMessageContent });
+			// Create message records for user and tool messages and add to conversation.
+			var userMessageRecord =
+				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.User, Content = userMessageContent };
+			var toolMessageRecord =
+				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.Tool, Content = toolMessageContent };
 
-			// Retrieve current message records for conversation record.
-			var messageRecords = await _messageRepository.GetMessagesByConversationIdAsync(conversationId);
+			await _messageRepository.InsertMessageAsync(toolMessageRecord);
+			await _messageRepository.InsertMessageAsync(userMessageRecord);
 
-			// Build conversation domain object and provide to chat completion service.
-			var conversation = new Conversation { ConversationRecord = conversationRecord, MessageRecords = messageRecords };
+			conversation.AddMessages(
+				[toolMessageRecord.ToDomainModel(), userMessageRecord.ToDomainModel()]);
+
+			// Generate assistant message content and add to conversation.
 			var assistantMessageContent = await _chatCompletionService.GetChatMessageContentAsync(conversation);
+			var assistantMessageRecord =
+				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.Assistant, Content = assistantMessageContent };
+			
+			await _messageRepository.InsertMessageAsync(assistantMessageRecord);
 
-			// Add assistant message content to conversation.
-			await _messageRepository.InsertMessageAsync(
-				new MessageRecord { ConversationId = conversationId, MessageAuthorRole = MessageAuthorRole.Assistant, Content = assistantMessageContent });
-
-			// Retrieve updated collection of message records for domain object.
-			messageRecords = await _messageRepository.GetMessagesByConversationIdAsync(conversationId);
-			conversation.MessageRecords = messageRecords;
+			conversation.AddMessages([assistantMessageRecord.ToDomainModel()]);
 
 			return conversation;
+		}
+
+		private async Task<Conversation?> GetExistingConversationByIdAsync(int id)
+		{
+			var conversationRecord =
+				await _conversationRepository.GetConversationByIdAsync(id);
+			if(conversationRecord == null) { return null; }
+
+			var messageRecords = await _messageRepository.GetMessagesByConversationIdAsync(conversationRecord.Id);
+
+			return conversationRecord.ToDomainModel(messageRecords);
 		}
 	}
 }

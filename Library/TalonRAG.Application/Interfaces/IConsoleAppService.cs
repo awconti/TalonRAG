@@ -1,4 +1,4 @@
-﻿namespace TalonRAG.Application.Services
+﻿namespace TalonRAG.Application.Interfaces
 {
     /// <summary>
     /// Interface for service classes seeking to implement functionality on behalf of a console application.

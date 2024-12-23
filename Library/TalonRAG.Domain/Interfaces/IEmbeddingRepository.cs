@@ -3,9 +3,9 @@
 namespace TalonRAG.Domain.Interfaces
 {
     /// <summary>
-    /// Interface for repository classes seeking to implement vector embedding database operations for <see cref="ArticleEmbeddingRecord" /> instances on behalf of the domain.
+    /// Interface for repository classes seeking to implement vector embedding database operations for <see cref="EmbeddingRecord" /> instances on behalf of the domain.
     /// </summary>
-    public interface IArticleEmbeddingRepository
+    public interface IEmbeddingRepository
 	{
 		/// <summary>
 		/// Purges all vector embeddings.
@@ -16,21 +16,21 @@ namespace TalonRAG.Domain.Interfaces
 		Task DeleteAllEmbeddingsAsync(DateTime? createDate = null);
 
 		/// <summary>
-		/// Inserts a list collection of <see cref="ArticleEmbeddingRecord" />.
+		/// Inserts a list collection of <see cref="EmbeddingRecord" />.
 		/// TODO: Replace w/ batched bulk insert.
 		/// </summary>
 		/// <param name="embeddingRecords">
-		/// List collection of <see cref="ArticleEmbeddingRecord" />.
+		/// List collection of <see cref="EmbeddingRecord" />.
 		/// </param>
-		Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords);
+		Task InsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords);
 
 		/// <summary>
-		/// Bulk inserts a list collection of <see cref="ArticleEmbeddingRecord" />.
+		/// Bulk inserts a list collection of <see cref="EmbeddingRecord" />.
 		/// </summary>
 		/// <param name="embeddingRecords">
-		/// List collection of <see cref="ArticleEmbeddingRecord" />.
+		/// List collection of <see cref="EmbeddingRecord" />.
 		/// </param>
-		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords);
+		Task BulkInsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords);
 
 		/// <summary>
 		/// Retrieves similar embeddings.
@@ -41,6 +41,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="limit">
 		/// Number of embeddings to retrieve.
 		/// </param>
-		Task<IList<ArticleEmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
+		Task<IList<EmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
 	}
 }

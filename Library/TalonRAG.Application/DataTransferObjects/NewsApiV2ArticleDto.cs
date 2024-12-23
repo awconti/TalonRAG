@@ -5,7 +5,7 @@ namespace TalonRAG.Application.DataTransferObjects
     /// <summary>
     /// DTO representing an article retrieved from <a href="https://newsapi.org">News API</a>.
     /// </summary>
-    public class NewsApiV2Article
+    public class NewsApiV2ArticleDto
     {
         /// <summary>
         /// Represents description field in JSON response.

@@ -1,4 +1,5 @@
-﻿using TalonRAG.Domain.Interfaces;
+﻿using TalonRAG.Application.Interfaces;
+using TalonRAG.Domain.Interfaces;
 
 namespace TalonRAG.Application.Services
 {
@@ -18,7 +19,8 @@ namespace TalonRAG.Application.Services
 			try
 			{
 				var userId = 1;
-				var conversation = await _conversationService.StartConversationAsync(userId);
+				var conversation = await _conversationService.StartConversationAsync(userId) 
+					?? throw new Exception("New conversation could not be created.");
 
 				while (true)
 				{
@@ -34,9 +36,9 @@ namespace TalonRAG.Application.Services
 						break;
 					}
 
-					conversation = 
-						await _conversationService.ContinueConversationAsync(conversation.ConversationRecord.Id, userMessage);
-					var assistantMessage = conversation.MessageRecords.Last().Content;
+					conversation = await _conversationService.ContinueConversationAsync(conversation.Id, userMessage)
+						?? throw new Exception("Conversation could not be continued as it could not be found.");
+					var assistantMessage = conversation.Messages.Last().Content;
 
 					Console.WriteLine($"TalonRAG: {assistantMessage}");
 

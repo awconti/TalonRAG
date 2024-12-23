@@ -1,4 +1,5 @@
 ﻿using TalonRAG.Application.DataTransferObjects;
+using TalonRAG.Application.Interfaces;
 using TalonRAG.Domain.Interfaces;
 
 namespace TalonRAG.Application.Services
@@ -7,15 +8,15 @@ namespace TalonRAG.Application.Services
     /// ETL console application service class implementation of <see cref="IConsoleAppService" />.
     /// </summary>
     /// <param name="embeddingService">
-    /// <see cref="IArticleEmbeddingService" />.
+    /// <see cref="IEmbeddingService" />.
     /// </param>
 	/// <param name="newsApiClient">
 	/// <see cref="IExternalArticleApiClient" />.
 	/// </param>
     public class EtlConsoleAppService(
-		IArticleEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
+		IEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
 	{
-		private readonly IArticleEmbeddingService _embeddingService = embeddingService;
+		private readonly IEmbeddingService _embeddingService = embeddingService;
 		private readonly IExternalArticleApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
@@ -28,7 +29,7 @@ namespace TalonRAG.Application.Services
 				var articles = await GetNewsApiArticlesAsync(maxArticleDate);
 				var articleDescriptions = articles.Select(article => article.Description).ToList();
 
-				await _embeddingService.CreateEmbeddingsForArticleDescriptionsAsync(articleDescriptions, maxArticleDate);
+				await _embeddingService.CreateEmbeddingsForContentAsync(articleDescriptions, maxArticleDate);
 			} 
 			catch (Exception ex)
 			{
@@ -36,7 +37,7 @@ namespace TalonRAG.Application.Services
 			}
 		}
 
-		private async Task<IList<NewsApiV2Article>> GetNewsApiArticlesAsync(DateTime maxArticleDate)
+		private async Task<IList<NewsApiV2ArticleDto>> GetNewsApiArticlesAsync(DateTime maxArticleDate)
 		{
 			var response = 
 				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");

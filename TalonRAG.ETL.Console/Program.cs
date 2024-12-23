@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TalonRAG.Application.Registrars;
-using TalonRAG.Application.Services;
+using TalonRAG.Application.Extensions;
+using TalonRAG.Application.Interfaces;
 
 internal class Program
 {
@@ -13,7 +13,7 @@ internal class Program
 			{
 				config.AddJsonFile("./Properties/appSettings.json", optional: false, reloadOnChange: true);
 			})
-			.ConfigureServices(EtlDependencyRegistrar.Register)
+			.ConfigureServices((context, services) => context.RegisterETLConsoleDependencies(services))
 			.Build();
 
 		// Resolve and run the application

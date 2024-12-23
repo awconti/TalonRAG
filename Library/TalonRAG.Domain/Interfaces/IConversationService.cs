@@ -8,12 +8,20 @@ namespace TalonRAG.Domain.Interfaces
 	public interface IConversationService
 	{
 		/// <summary>
+		/// Retrieves a conversation by id.
+		/// </summary>
+		/// <param name="id">
+		/// The unique database identifier of the conversation.
+		/// </param>
+		Task<Conversation?> GetConversationByIdAsync(int id);
+
+		/// <summary>
 		/// Creates a conversation for a specific user.
 		/// </summary>
 		/// <param name="userId">
 		/// The unique database identifier of the user.
 		/// </param>
-		Task<Conversation> StartConversationAsync(int userId);
+		Task<Conversation?> StartConversationAsync(int userId);
 
 		/// <summary>
 		/// Continues a specific conversation on behalf of the user.
@@ -24,6 +32,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="userMessageContent">
 		/// The content of the user's message.
 		/// </param>
-		Task<Conversation> ContinueConversationAsync(int conversationId, string userMessageContent);
+		Task<Conversation?> ContinueConversationAsync(int conversationId, string userMessageContent);
 	}
 }

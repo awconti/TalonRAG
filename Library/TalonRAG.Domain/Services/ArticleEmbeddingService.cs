@@ -1,36 +1,37 @@
 ﻿using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Domain.Extensions;
 using TalonRAG.Domain.Models;
 
 namespace TalonRAG.Domain.Services
 {
 	/// <summary>
-	/// Article embedding service class implementation of <see cref="IArticleEmbeddingService" />.
+	/// Article embedding service class implementation of <see cref="IEmbeddingService" />.
 	/// </summary>
 	/// <param name="embeddingGenerationService">
 	/// <see cref="IEmbeddingGenerationService" />.
 	/// </param>
 	/// <param name="repository">
-	/// <see cref="IArticleEmbeddingRepository" />.
+	/// <see cref="IEmbeddingRepository" />.
 	/// </param>
-	public class ArticleEmbeddingService(IEmbeddingGenerationService embeddingGenerationService, IArticleEmbeddingRepository repository) : IArticleEmbeddingService
+	public class ArticleEmbeddingService(IEmbeddingGenerationService embeddingGenerationService, IEmbeddingRepository repository) : IEmbeddingService
 	{
 		private readonly IEmbeddingGenerationService _embeddingGenerationService = embeddingGenerationService;
-		private readonly IArticleEmbeddingRepository _repository = repository;
+		private readonly IEmbeddingRepository _repository = repository;
 
-		/// <inheritdoc cref="IArticleEmbeddingService.CreateArticleDescriptionsAsEmbeddingsAsync(IList{string}, DateTime)" />
-		public async Task CreateEmbeddingsForArticleDescriptionsAsync(IList<string> articleDescriptions, DateTime maxArticleDate)
+		/// <inheritdoc cref="IEmbeddingService.CreateEmbeddingsForContentAsync(IList{string}, DateTime)" />
+		public async Task CreateEmbeddingsForContentAsync(IList<string> articleDescriptions, DateTime maxArticleDate)
 		{
-			var articleEmbeddingRecords = new List<ArticleEmbeddingRecord>();
+			var articleEmbeddingRecords = new List<EmbeddingRecord>();
 			foreach (var description in articleDescriptions)
 			{
 				var embeddings = await _embeddingGenerationService.GenerateEmbeddingsAsync([description]);
 				var embedding = embeddings.FirstOrDefault();
 
-				var articleEmbedding = new ArticleEmbeddingRecord
+				var articleEmbedding = new EmbeddingRecord
 				{
 					Content = description,
-					Embedding = embedding.ToArray()
+					VectorEmbedding = embedding.ToArray()
 				};
 
 				articleEmbeddingRecords.Add(articleEmbedding);
@@ -40,19 +41,13 @@ namespace TalonRAG.Domain.Services
 			await _repository.BulkInsertEmbeddingsAsync(articleEmbeddingRecords);
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingService.GetSimilarArticleEmbeddingsForMessageContentAsync(string)" />
-		public async Task<IList<ArticleEmbedding>> GetSimilarArticleEmbeddingsForMessageContentAsync(string messageContent)
+		/// <inheritdoc cref="IEmbeddingService.GetSimilarEmbeddingsFromContentAsync(string)" />
+		public async Task<IList<Embedding>> GetSimilarEmbeddingsFromContentAsync(string content)
 		{
-			var messageContentEmbeddings = await _embeddingGenerationService.GenerateEmbeddingsAsync([ messageContent ]);
+			var messageContentEmbeddings = await _embeddingGenerationService.GenerateEmbeddingsAsync([ content ]);
 			var articleEmbeddingRecords = await _repository.GetSimilarEmbeddingsAsync([ ..messageContentEmbeddings.FirstOrDefault().ToArray() ]);
 
-			var articleEmbeddings = new List<ArticleEmbedding>();
-			foreach(var record in articleEmbeddingRecords)
-			{
-				articleEmbeddings.Add(new ArticleEmbedding { ArticleEmbeddingRecord = record });
-			}
-
-			return articleEmbeddings;
+			return articleEmbeddingRecords.Select(record => record.ToDomainModel()).ToList();
 		}
 	}
 }

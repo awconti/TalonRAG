@@ -7,14 +7,14 @@ using TalonRAG.Infrastructure.ConfigurationSettings;
 namespace TalonRAG.Infrastructure.Repositories
 {
 	/// <summary>
-	/// Npgsql specific embedding repository implementation of <see cref="IArticleEmbeddingRepository"/>.
+	/// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
 	/// </summary>
 	/// <param name="options">
 	/// <see cref="IOptions{DatabaseConfigurationSettings}"/>.
 	/// </param>
-	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IArticleEmbeddingRepository
+	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IEmbeddingRepository
 	{
-		/// <inheritdoc cref="IArticleEmbeddingRepository.DeleteAllEmbeddingsAsync" />
+		/// <inheritdoc cref="IEmbeddingRepository.DeleteAllEmbeddingsAsync" />
 		public async Task DeleteAllEmbeddingsAsync(DateTime? createDate = null)
 		{
 			var sql = "DELETE FROM article_embeddings ";
@@ -29,8 +29,8 @@ namespace TalonRAG.Infrastructure.Repositories
 			await ExecuteNonQueryAsync(sql, parameters);
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
-		public async Task InsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords)
+		/// <inheritdoc cref="IEmbeddingRepository.InsertEmbeddingsAsync(IList{EmbeddingRecord})" />
+		public async Task InsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords)
 		{
 			foreach (var record in embeddingRecords)
 			{
@@ -39,7 +39,7 @@ namespace TalonRAG.Infrastructure.Repositories
 
 				var parameters = new Dictionary<string, object>
 				{
-					{ "@Embedding", new Vector(record.Embedding) },
+					{ "@Embedding", new Vector(record.VectorEmbedding) },
 					{ "@Content", record.Content }
 				};
 
@@ -47,8 +47,8 @@ namespace TalonRAG.Infrastructure.Repositories
 			}
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbeddingRecord})" />
-		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingRecord> embeddingRecords)
+		/// <inheritdoc cref="IEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{EmbeddingRecord})" />
+		public async Task BulkInsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords)
 		{
 			var command =
 				"COPY article_embeddings (article_embedding, article_content) FROM STDIN (FORMAT BINARY)";
@@ -58,14 +58,14 @@ namespace TalonRAG.Infrastructure.Repositories
 				foreach (var record in embeddingRecords)
 				{
 					await writer.StartRowAsync();
-					writer.Write(new Vector(record.Embedding));
+					writer.Write(new Vector(record.VectorEmbedding));
 					writer.Write(record.Content);
 				}
 			});
 		}
 
-		/// <inheritdoc cref="IArticleEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
-		public async Task<IList<ArticleEmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
+		/// <inheritdoc cref="IEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
+		public async Task<IList<EmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
 		{
 			string sql = $@"
                 SELECT id, article_embedding, article_content
@@ -82,10 +82,10 @@ namespace TalonRAG.Infrastructure.Repositories
 
 			return await ExecuteReaderAsync(
 				sql,
-				reader => new ArticleEmbeddingRecord
+				reader => new EmbeddingRecord
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
-					Embedding = reader.GetFieldValue<Vector>(reader.GetOrdinal("article_embedding")).ToArray(),
+					VectorEmbedding = reader.GetFieldValue<Vector>(reader.GetOrdinal("article_embedding")).ToArray(),
 					Content = reader.GetString(reader.GetOrdinal("article_content"))
 				},
 				parameters);

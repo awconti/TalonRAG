@@ -11,6 +11,6 @@ namespace TalonRAG.Application.DataTransferObjects
 		/// List collection of <see cref="IList{NewsApiArticle?}"/>
 		/// </summary>
 		[JsonPropertyName("articles")]
-		public IList<NewsApiV2Article>? Articles { get; set; }
+		public IList<NewsApiV2ArticleDto>? Articles { get; set; }
 	}
 }
