@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalonRAG.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalonRAG.Application", "Library\TalonRAG.Application\TalonRAG.Application.csproj", "{A7D8A81F-693A-4C17-BC2C-3BFB97929CB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalonRAG.Conversation.WebAPI", "TalonRAG.Conversation.WebAPI\TalonRAG.Conversation.WebAPI.csproj", "{6D22C3AC-D013-4E74-88B7-176DE2996B0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalonRAG.WebAPI", "TalonRAG.WebAPI\TalonRAG.WebAPI.csproj", "{6D22C3AC-D013-4E74-88B7-176DE2996B0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

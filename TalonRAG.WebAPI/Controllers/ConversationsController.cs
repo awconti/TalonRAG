@@ -4,7 +4,7 @@ using TalonRAG.Application.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace TalonRAG.Conversation.WebAPI.Controllers
+namespace TalonRAG.WebAPI.Controllers
 {
 	[Route("api/conversations")]
 	[ApiController]
@@ -13,7 +13,7 @@ namespace TalonRAG.Conversation.WebAPI.Controllers
 		private readonly IConversationApiService _conversationApiService = conversationApiService;
 
 		[HttpGet("{id}")]
-		public async Task<IActionResult> GetConversationByIdAsync(int id)
+		public async Task<ActionResult<ConversationDto>> GetConversationByIdAsync(int id)
 		{
 			var response = await _conversationApiService.GetConversationByIdAsync(id);
 			if (response == null)
@@ -25,7 +25,7 @@ namespace TalonRAG.Conversation.WebAPI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> AddNewConversationAsync(NewConversationRequest request)
+		public async Task<ActionResult<ConversationDto>> AddNewConversationAsync(NewConversationRequest request)
 		{
 			var response = await _conversationApiService.AddNewConversationAsync(request);
 			if (response == null)
@@ -37,7 +37,7 @@ namespace TalonRAG.Conversation.WebAPI.Controllers
 		}
 
 		[HttpPut("{id}/messages")]
-		public async Task<IActionResult> UpdateConversationAsync(int id, UpdateConversationRequest request)
+		public async Task<ActionResult<ConversationDto>> UpdateConversationAsync(int id, UpdateConversationRequest request)
 		{
 			var response = await _conversationApiService.UpdateConversationAsync(id, request);
 			if (response == null)
