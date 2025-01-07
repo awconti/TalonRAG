@@ -5,7 +5,7 @@ namespace TalonRAG.Domain.Models
 	/// <summary>
 	/// Model representing a message within a conversation on behalf of the domain.
 	/// </summary>
-	public class Message
+	public class MessageModel
 	{
 		/// <summary>
 		/// The unique database identifier for the message.
@@ -13,9 +13,14 @@ namespace TalonRAG.Domain.Models
 		public int Id { get; set; }
 
 		/// <summary>
-		/// The <see cref="MessageAuthorRole" /> of the message.
+		/// The unique identifier for the conversation this message is a part of.
 		/// </summary>
-		public MessageAuthorRole AuthorRole { get; set; }
+		public int ConversationId { get; set; }
+
+		/// <summary>
+		/// <see cref="MessageType" />.
+		/// </summary>
+		public MessageType MessageType { get; set; }
 
 		/// <summary>
 		/// The content of the message.

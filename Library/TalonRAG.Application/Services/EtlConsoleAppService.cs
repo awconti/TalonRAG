@@ -8,15 +8,15 @@ namespace TalonRAG.Application.Services
     /// ETL console application service class implementation of <see cref="IConsoleAppService" />.
     /// </summary>
     /// <param name="embeddingService">
-    /// <see cref="IEmbeddingService" />.
+    /// <see cref="IArticleEmbeddingService" />.
     /// </param>
 	/// <param name="newsApiClient">
 	/// <see cref="IExternalArticleApiClient" />.
 	/// </param>
     public class EtlConsoleAppService(
-		IEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
+		IArticleEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
 	{
-		private readonly IEmbeddingService _embeddingService = embeddingService;
+		private readonly IArticleEmbeddingService _embeddingService = embeddingService;
 		private readonly IExternalArticleApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />

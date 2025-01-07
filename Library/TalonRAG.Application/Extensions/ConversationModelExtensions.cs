@@ -6,16 +6,16 @@ namespace TalonRAG.Application.Extensions
     /// <summary>
     /// Mapper class responsible for constructing <see cref="ConversationDto" /> instances on behalf of the application.
     /// </summary>
-    public static class ConversationExtensions
+    public static class ConversationModelExtensions
     {
         /// <summary>
-        /// Creates a new <see cref="ConversationDto" /> instance based on a <see cref="Conversation" /> model instance 
-        /// and an optional collection of <see cref="Message" /> model instances.
+        /// Creates a new <see cref="ConversationDto" /> instance based on a <see cref="ConversationModel" /> model instance 
+        /// and an optional collection of <see cref="MessageModel" /> model instances.
         /// </summary>
         /// <param name="conversation">
-        /// <see cref="Conversation" />.
+        /// <see cref="ConversationModel" />.
         /// </param>
-        public static ConversationDto ToDto(this Conversation conversation)
+        public static ConversationDto ToDto(this ConversationModel conversation)
         {
             return new ConversationDto
             {

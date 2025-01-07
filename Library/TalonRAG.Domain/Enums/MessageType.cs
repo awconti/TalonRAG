@@ -3,9 +3,9 @@
 namespace TalonRAG.Domain.Enums
 {
 	/// <summary>
-	/// The role of the author of a <see cref="Message" />.
+	/// The role of the author of a <see cref="MessageModel" />.
 	/// </summary>
-	public enum MessageAuthorRole
+	public enum MessageType
 	{
 		/// <summary>
 		/// The role that defines messages initiated by the AI assistant.

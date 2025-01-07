@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Model class representing a conversation on behalf of the domain.
 	/// </summary>
-	public class Conversation
+	public class ConversationModel
 	{
 		/// <summary>
 		/// The unique database identifier of the conversation.
@@ -23,15 +23,15 @@
 		/// <summary>
 		/// Collection of messages which are a part of the conversation.
 		/// </summary>
-		public List<Message> Messages { get; private set; } = [];
+		public List<MessageModel> Messages { get; private set; } = [];
 
 		/// <summary>
 		/// Adds a message to the collection of messages in the conversation.
 		/// </summary>
 		/// <param name="messages">
-		/// <see cref="Message" />.
+		/// <see cref="MessageModel" />.
 		/// </param>
-		public void AddMessages(IList<Message> messages)
+		public void AddMessages(IList<MessageModel> messages)
 		{
 			Messages.AddRange(messages);
 		}
@@ -40,11 +40,11 @@
 		/// Sets the message collection in the conversation.
 		/// </summary>
 		/// <param name="messages">
-		/// A collection of <see cref="Message" /> instances.
+		/// A collection of <see cref="MessageModel" /> instances.
 		/// </param>
-		public void SetMessages(IList<Message> messages)
+		public void SetMessages(IList<MessageModel> messages)
 		{
-			Messages = (List<Message>) messages;
+			Messages = (List<MessageModel>) messages;
 		}
 	}
 }

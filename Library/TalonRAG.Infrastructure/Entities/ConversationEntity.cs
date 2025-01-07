@@ -1,9 +1,9 @@
-﻿namespace TalonRAG.Domain.Entities
+﻿namespace TalonRAG.Infrastructure.Entities
 {
 	/// <summary>
 	/// Represents a persisted conversation which serves as a reference to a sequence of messages.
 	/// </summary>
-	public class ConversationRecord
+	public class ConversationEntity
 	{
 		/// <summary>
 		/// The unique database identifier of the conversation.

@@ -1,9 +1,9 @@
-﻿namespace TalonRAG.Domain.Entities
+﻿namespace TalonRAG.Infrastructure.Entities
 {
     /// <summary>
     /// Represents persisted embedded article desription content.
     /// </summary>
-    public class EmbeddingRecord
+    public class ArticleEmbeddingEntity
     {
         /// <summary>
         /// The unique database identifier for the article embedding.

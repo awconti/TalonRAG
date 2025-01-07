@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
-using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Domain.Models;
 using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Entities;
+using TalonRAG.Infrastructure.Extensions;
 
 namespace TalonRAG.Infrastructure.Repositories
 {
@@ -13,22 +15,22 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlConversationRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IConversationRepository
 	{
-		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(ConversationRecord)" />
-		public async Task<int> InsertConversationAsync(ConversationRecord conversationRecord)
+		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(int)" />
+		public async Task<int> InsertConversationAsync(int userId)
 		{
 			var sql =
 				"INSERT INTO conversations (user_id) VALUES (@UserId) RETURNING id;";
 
 			var parameters = new Dictionary<string, object>
 			{
-				{ "@UserId", conversationRecord.UserId }
+				{ "@UserId", userId }
 			};
 
 			return await ExecuteScalarAsync<int>(sql, parameters);
 		}
 
 		/// <inheritdoc cref="IConversationRepository.GetConversationByIdAsync(int)" />
-		public async Task<ConversationRecord?> GetConversationByIdAsync(int conversationId)
+		public async Task<ConversationModel?> GetConversationByIdAsync(int conversationId)
 		{
 			string sql = $@"
                 SELECT id, user_id, create_date
@@ -41,9 +43,9 @@ namespace TalonRAG.Infrastructure.Repositories
 				{ "@ConversationId", conversationId }
 			};
 
-			var conversationRecords = await ExecuteReaderAsync(
+			var conversationEntities = await ExecuteReaderAsync(
 				sql,
-				reader => new ConversationRecord
+				reader => new ConversationEntity
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
@@ -51,11 +53,11 @@ namespace TalonRAG.Infrastructure.Repositories
 				},
 				parameters);
 
-			return conversationRecords.FirstOrDefault();
+			return conversationEntities.FirstOrDefault().ToDomainModel();
 		}
 
 		/// <inheritdoc cref="IConversationRepository.GetConversationsByUserIdAsync(int)" />
-		public async Task<IList<ConversationRecord>> GetConversationsByUserIdAsync(int userId)
+		public async Task<IList<ConversationModel>> GetConversationsByUserIdAsync(int userId)
 		{
 			string sql = $@"
                 SELECT id, user_id, create_date
@@ -68,15 +70,17 @@ namespace TalonRAG.Infrastructure.Repositories
 				{ "@UserId", userId }
 			};
 
-			return await ExecuteReaderAsync(
+			var conversationEntities = await ExecuteReaderAsync(
 				sql,
-				reader => new ConversationRecord
+				reader => new ConversationEntity
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
 					CreateDate = reader.GetDateTime(reader.GetOrdinal("create_date"))
 				},
 				parameters);
+
+			return conversationEntities.Select(entity => entity.ToDomainModel()).ToList();
 		}
 	}
 }

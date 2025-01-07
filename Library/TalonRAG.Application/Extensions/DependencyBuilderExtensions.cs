@@ -13,7 +13,7 @@ using TalonRAG.Infrastructure.SemanticKernel;
 
 namespace TalonRAG.Application.Extensions
 {
-    public static class BuilderExtensions
+    public static class DependencyBuilderExtensions
 	{
 		/// <summary>
 		/// Registers dependencies for the TalonRAG ETL console solution.
@@ -42,8 +42,8 @@ namespace TalonRAG.Application.Extensions
 				client.DefaultRequestHeaders.Add("User-Agent", Assembly.GetExecutingAssembly().GetName().Name);
 			});
 
-			services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-			services.AddTransient<IEmbeddingService, ArticleEmbeddingService>();
+			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
 			services.AddTransient<IConsoleAppService, EtlConsoleAppService>();
 		}
@@ -66,10 +66,10 @@ namespace TalonRAG.Application.Extensions
 			services.Configure<ChatCompletionConfigurationSettings>(chatCompletionConfig);
 			services.Configure<EmbeddingGenerationConfigurationSettings>(embeddingGenerationConfig);
 
-			services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 			services.AddTransient<IMessageRepository, NpgsqlMessageRepository>();
 			services.AddTransient<IConversationRepository, NpgsqlConversationRepository>();
-			services.AddTransient<IEmbeddingService, ArticleEmbeddingService>();
+			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
 			services.AddTransient<IConversationService, ArticleConversationService>();
 			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
@@ -93,10 +93,10 @@ namespace TalonRAG.Application.Extensions
 			services.Configure<ChatCompletionConfigurationSettings>(chatCompletionConfig);
 			services.Configure<EmbeddingGenerationConfigurationSettings>(embeddingGenerationConfig);
 
-			services.AddTransient<IEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
 			services.AddTransient<IMessageRepository, NpgsqlMessageRepository>();
 			services.AddTransient<IConversationRepository, NpgsqlConversationRepository>();
-			services.AddTransient<IEmbeddingService, ArticleEmbeddingService>();
+			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
 			services.AddTransient<IConversationService, ArticleConversationService>();
 			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
 			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();

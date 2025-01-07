@@ -13,6 +13,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="chatHistory">
 		/// Object containing history of prior input from user and responses from the language model.
 		/// </param>
-		Task<string> GetChatMessageContentAsync(Conversation chatHistory);
+		Task<string> GetChatMessageContentAsync(ConversationModel chatHistory);
 	}
 }

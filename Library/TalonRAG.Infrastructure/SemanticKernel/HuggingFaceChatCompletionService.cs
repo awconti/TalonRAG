@@ -19,8 +19,8 @@ namespace TalonRAG.Infrastructure.SemanticKernel
     {
         private readonly ChatCompletionConfigurationSettings _configurationSettings = options.Value;
 
-        /// <inheritdoc cref="IChatCompletionService.GetChatMessageContentAsync(Conversation)" />
-        public async Task<string> GetChatMessageContentAsync(Conversation conversation)
+        /// <inheritdoc cref="IChatCompletionService.GetChatMessageContentAsync(ConversationModel)" />
+        public async Task<string> GetChatMessageContentAsync(ConversationModel conversation)
         {
             if (_configurationSettings.IsMissing())
             {

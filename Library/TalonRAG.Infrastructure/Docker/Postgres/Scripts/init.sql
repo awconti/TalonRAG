@@ -27,7 +27,9 @@ CREATE TABLE IF NOT EXISTS public.conversations (
 CREATE TABLE IF NOT EXISTS public.messages (
     id SERIAL PRIMARY KEY,
     conversation_id INTEGER references public.conversations (id),
-    author_role INTEGER,
+    message_type INTEGER,
     message_content TEXT,
     create_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO users (email) VALUES ('tstusr@talonrag.ai');

@@ -1,20 +1,22 @@
 ﻿using Microsoft.Extensions.Options;
 using Pgvector;
-using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Domain.Models;
 using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Entities;
+using TalonRAG.Infrastructure.Extensions;
 
 namespace TalonRAG.Infrastructure.Repositories
 {
 	/// <summary>
-	/// Npgsql specific embedding repository implementation of <see cref="IEmbeddingRepository"/>.
+	/// Npgsql specific embedding repository implementation of <see cref="IArticleEmbeddingRepository"/>.
 	/// </summary>
 	/// <param name="options">
 	/// <see cref="IOptions{DatabaseConfigurationSettings}"/>.
 	/// </param>
-	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IEmbeddingRepository
+	public class NpgsqlArticleEmbeddingRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IArticleEmbeddingRepository
 	{
-		/// <inheritdoc cref="IEmbeddingRepository.DeleteAllEmbeddingsAsync" />
+		/// <inheritdoc cref="IArticleEmbeddingRepository.DeleteAllEmbeddingsAsync" />
 		public async Task DeleteAllEmbeddingsAsync(DateTime? createDate = null)
 		{
 			var sql = "DELETE FROM article_embeddings ";
@@ -29,43 +31,43 @@ namespace TalonRAG.Infrastructure.Repositories
 			await ExecuteNonQueryAsync(sql, parameters);
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.InsertEmbeddingsAsync(IList{EmbeddingRecord})" />
-		public async Task InsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords)
+		/// <inheritdoc cref="IArticleEmbeddingRepository.InsertEmbeddingsAsync(IList{ArticleEmbeddingModel})" />
+		public async Task InsertEmbeddingsAsync(IList<ArticleEmbeddingModel> embeddingModels)
 		{
-			foreach (var record in embeddingRecords)
+			foreach (var model in embeddingModels)
 			{
 				var sql =
 					"INSERT INTO article_embeddings (article_embedding, article_content) VALUES (@Embedding, @Content);";
 
 				var parameters = new Dictionary<string, object>
 				{
-					{ "@Embedding", new Vector(record.VectorEmbedding) },
-					{ "@Content", record.Content }
+					{ "@Embedding", new Vector(model.VectorEmbedding) },
+					{ "@Content", model.Content }
 				};
 
 				await ExecuteNonQueryAsync(sql, parameters);
 			}
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{EmbeddingRecord})" />
-		public async Task BulkInsertEmbeddingsAsync(IList<EmbeddingRecord> embeddingRecords)
+		/// <inheritdoc cref="IArticleEmbeddingRepository.BulkInsertEmbeddingsAsync(IList{ArticleEmbeddingModel})" />
+		public async Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingModel> embeddingModels)
 		{
 			var command =
 				"COPY article_embeddings (article_embedding, article_content) FROM STDIN (FORMAT BINARY)";
 
 			await BinaryImportAsync(command, async writer =>
 			{
-				foreach (var record in embeddingRecords)
+				foreach (var model in embeddingModels)
 				{
 					await writer.StartRowAsync();
-					writer.Write(new Vector(record.VectorEmbedding));
-					writer.Write(record.Content);
+					writer.Write(new Vector(model.VectorEmbedding));
+					writer.Write(model.Content);
 				}
 			});
 		}
 
-		/// <inheritdoc cref="IEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
-		public async Task<IList<EmbeddingRecord>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
+		/// <inheritdoc cref="IArticleEmbeddingRepository.GetSimilarEmbeddingsAsync(float[], int)" />
+		public async Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 3)
 		{
 			string sql = $@"
                 SELECT id, article_embedding, article_content
@@ -80,15 +82,17 @@ namespace TalonRAG.Infrastructure.Repositories
 				{ "@Limit", limit }
 			};
 
-			return await ExecuteReaderAsync(
+			var embeddingEntities = await ExecuteReaderAsync(
 				sql,
-				reader => new EmbeddingRecord
+				reader => new ArticleEmbeddingEntity
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					VectorEmbedding = reader.GetFieldValue<Vector>(reader.GetOrdinal("article_embedding")).ToArray(),
 					Content = reader.GetString(reader.GetOrdinal("article_content"))
 				},
 				parameters);
+
+			return embeddingEntities.Select(entity => entity.ToDomainModel()).ToList();
 		}
 	}
 }

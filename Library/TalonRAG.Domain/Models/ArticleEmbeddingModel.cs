@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Model class representing an embedding on behalf of the domain.
 	/// </summary>
-	public class Embedding
+	public class ArticleEmbeddingModel
 	{
 		/// <summary>
 		/// The unique database identifier for the article embedding.

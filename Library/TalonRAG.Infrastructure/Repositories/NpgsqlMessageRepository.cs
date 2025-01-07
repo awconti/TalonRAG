@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using TalonRAG.Domain.Entities;
 using TalonRAG.Domain.Enums;
 using TalonRAG.Domain.Interfaces;
+using TalonRAG.Domain.Models;
 using TalonRAG.Infrastructure.ConfigurationSettings;
+using TalonRAG.Infrastructure.Entities;
+using TalonRAG.Infrastructure.Extensions;
 
 namespace TalonRAG.Infrastructure.Repositories
 {
@@ -14,27 +16,27 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlMessageRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IMessageRepository
 	{
-		/// <inheritdoc cref="IMessageRepository.InsertMessageAsync(MessageRecord)" />
-		public async Task<int> InsertMessageAsync(MessageRecord messageRecord)
+		/// <inheritdoc cref="IMessageRepository.InsertMessageAsync(MessageModel)" />
+		public async Task<int> InsertMessageAsync(MessageModel messageModel)
 		{
 			var sql =
-				"INSERT INTO messages (conversation_id, author_role, message_content) VALUES (@ConversationId, @AuthorRole, @MessageContent) RETURNING id;";
+				"INSERT INTO messages (conversation_id, message_type, message_content) VALUES (@ConversationId, @MessageType, @MessageContent) RETURNING id;";
 
 			var parameters = new Dictionary<string, object>
 			{
-				{ "@ConversationId", messageRecord.ConversationId},
-				{ "@AuthorRole", (int) messageRecord.MessageAuthorRole },
-				{ "@MessageContent", messageRecord.Content }
+				{ "@ConversationId", messageModel.ConversationId},
+				{ "@MessageType", (int) messageModel.MessageType },
+				{ "@MessageContent", messageModel.Content }
 			};
 
 			return await ExecuteScalarAsync<int>(sql, parameters);
 		}
 
 		/// <inheritdoc cref="IMessageRepository.GetMessagesByConversationIdAsync(int)" />
-		public async Task<IList<MessageRecord>> GetMessagesByConversationIdAsync(int conversationId)
+		public async Task<IList<MessageModel>> GetMessagesByConversationIdAsync(int conversationId)
 		{
 			string sql = $@"
-                SELECT id, conversation_id, author_role, message_content, create_date
+                SELECT id, conversation_id, message_type, message_content, create_date
 				FROM messages
 				WHERE conversation_id = @ConversationId;
 			";
@@ -44,17 +46,19 @@ namespace TalonRAG.Infrastructure.Repositories
 				{ "@ConversationId", conversationId }
 			};
 
-			return await ExecuteReaderAsync(
+			var messageEntities = await ExecuteReaderAsync(
 				sql,
-				reader => new MessageRecord
+				reader => new MessageEntity
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					ConversationId = reader.GetInt32(reader.GetOrdinal("conversation_id")),
-					MessageAuthorRole = (MessageAuthorRole) reader.GetInt32(reader.GetOrdinal("author_role")),
+					MessageType = (MessageType) reader.GetInt32(reader.GetOrdinal("message_type")),
 					Content = reader.GetString(reader.GetOrdinal("message_content")),
 					CreateDate = reader.GetDateTime(reader.GetOrdinal("create_date"))
 				},
 				parameters);
+
+			return messageEntities.Select(entity => entity.ToDomainModel()).ToList();
 		}
 	}
 }

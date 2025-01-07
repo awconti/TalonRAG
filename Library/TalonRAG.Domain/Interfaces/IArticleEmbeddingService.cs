@@ -5,7 +5,7 @@ namespace TalonRAG.Domain.Interfaces
 	/// <summary>
 	/// Interface for classes settings to embed articles on behalf of the domain.
 	/// </summary>
-	public interface IEmbeddingService
+	public interface IArticleEmbeddingService
 	{
 		/// <summary>
 		/// Creates embeddings for a list of article descriptions.
@@ -24,6 +24,6 @@ namespace TalonRAG.Domain.Interfaces
 		/// <param name="content">
 		/// The content to use when retrieving similar embeddings.
 		/// </param>
-		Task<IList<Embedding>> GetSimilarEmbeddingsFromContentAsync(string content);
+		Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsFromContentAsync(string content);
 	}
 }

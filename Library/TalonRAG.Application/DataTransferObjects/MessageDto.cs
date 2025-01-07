@@ -8,9 +8,9 @@ namespace TalonRAG.Application.DataTransferObjects
 	public class MessageDto
 	{
 		/// <summary>
-		/// The <see cref="MessageAuthorRole" /> of the message.
+		/// <see cref="MessageType" />.
 		/// </summary>
-		public MessageAuthorRole AuthorRole { get; set; }
+		public MessageType MessageType { get; set; }
 
 		/// <summary>
 		/// The content of the message.
