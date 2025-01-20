@@ -1,11 +1,12 @@
 ﻿using TalonRAG.Application.DataTransferObjects;
+using TalonRAG.Application.DataTransferObjects.Requests;
 
 namespace TalonRAG.Application.Interfaces
 {
-	/// <summary>
-	/// Interface for conversations seeking to implement conversation functionality via WebAPI. 
-	/// </summary>
-	public interface IConversationApiService
+    /// <summary>
+    /// Interface for classes seeking to implement conversation functionality via API. 
+    /// </summary>
+    public interface IConversationApiService
 	{
 		/// <summary>
 		/// Retrieves conversation by ID.
@@ -13,7 +14,7 @@ namespace TalonRAG.Application.Interfaces
 		/// <param name="id">
 		/// Unique database identifier of the conversation.
 		/// </param>
-		Task<ConversationDto?> GetConversationByIdAsync(int id);
+		Task<ConversationDto> GetConversationByIdAsync(int id);
 
 		/// <summary>
 		/// Initiates a new conversation.
@@ -21,7 +22,7 @@ namespace TalonRAG.Application.Interfaces
 		/// <param name="request">
 		/// <see cref="NewConversationRequest"/>.
 		/// </param>
-		Task<ConversationDto?> AddNewConversationAsync(NewConversationRequest request);
+		Task<ConversationDto> AddNewConversationAsync(NewConversationRequest request);
 
 		/// <summary>
 		/// Updates an existing conversation.
@@ -32,6 +33,6 @@ namespace TalonRAG.Application.Interfaces
 		/// <param name="request">
 		/// <see cref="UpdateConversationRequest"/>.
 		/// </param>
-		Task<ConversationDto?> UpdateConversationAsync(int conversationId, UpdateConversationRequest request);
+		Task<ConversationDto> UpdateConversationAsync(int conversationId, UpdateConversationRequest request);
 	}
 }

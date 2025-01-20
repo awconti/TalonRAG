@@ -42,10 +42,10 @@ namespace TalonRAG.Application.Extensions
 				client.DefaultRequestHeaders.Add("User-Agent", Assembly.GetExecutingAssembly().GetName().Name);
 			});
 
-			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
-			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
-			services.AddTransient<IConsoleAppService, EtlConsoleAppService>();
+			services.AddScoped<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddScoped<IArticleEmbeddingService, ArticleEmbeddingService>();
+			services.AddScoped<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
+			services.AddScoped<IConsoleAppService, EtlConsoleAppService>();
 		}
 
 		/// <summary>
@@ -66,14 +66,14 @@ namespace TalonRAG.Application.Extensions
 			services.Configure<ChatCompletionConfigurationSettings>(chatCompletionConfig);
 			services.Configure<EmbeddingGenerationConfigurationSettings>(embeddingGenerationConfig);
 
-			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-			services.AddTransient<IMessageRepository, NpgsqlMessageRepository>();
-			services.AddTransient<IConversationRepository, NpgsqlConversationRepository>();
-			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
-			services.AddTransient<IConversationService, ArticleConversationService>();
-			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
-			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
-			services.AddTransient<IConsoleAppService, RagConsoleAppService>();
+			services.AddScoped<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddScoped<IMessageRepository, NpgsqlMessageRepository>();
+			services.AddScoped<IConversationRepository, NpgsqlConversationRepository>();
+			services.AddScoped<IArticleEmbeddingService, ArticleEmbeddingService>();
+			services.AddScoped<IConversationService, ArticleConversationService>();
+			services.AddScoped<IChatCompletionService, HuggingFaceChatCompletionService>();
+			services.AddScoped<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
+			services.AddScoped<IConsoleAppService, RagConsoleAppService>();
 		}
 
 		/// <summary>
@@ -93,14 +93,17 @@ namespace TalonRAG.Application.Extensions
 			services.Configure<ChatCompletionConfigurationSettings>(chatCompletionConfig);
 			services.Configure<EmbeddingGenerationConfigurationSettings>(embeddingGenerationConfig);
 
-			services.AddTransient<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
-			services.AddTransient<IMessageRepository, NpgsqlMessageRepository>();
-			services.AddTransient<IConversationRepository, NpgsqlConversationRepository>();
-			services.AddTransient<IArticleEmbeddingService, ArticleEmbeddingService>();
-			services.AddTransient<IConversationService, ArticleConversationService>();
-			services.AddTransient<IChatCompletionService, HuggingFaceChatCompletionService>();
-			services.AddTransient<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
-			services.AddTransient<IConversationApiService, ConversationApiService>();
+			services.AddScoped<IArticleEmbeddingRepository, NpgsqlArticleEmbeddingRepository>();
+			services.AddScoped<IMessageRepository, NpgsqlMessageRepository>();
+			services.AddScoped<IConversationRepository, NpgsqlConversationRepository>();
+			services.AddScoped<IUserRepository, NpgsqlUserRepository>();
+			services.AddScoped<IArticleEmbeddingService, ArticleEmbeddingService>();
+			services.AddScoped<IConversationService, ArticleConversationService>();
+			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IChatCompletionService, HuggingFaceChatCompletionService>();
+			services.AddScoped<IEmbeddingGenerationService, HuggingFaceEmbeddingGenerationService>();
+			services.AddScoped<IConversationApiService, ConversationApiService>();
+			services.AddScoped<IUserApiService, UserApiService>();
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace TalonRAG.Domain.Services
 		private readonly IChatCompletionService _chatCompletionService = chatCompletionService;
 
 		/// <inheritdoc cref="IConversationService.GetConversationByIdAsync(int)"
-		public async Task<ConversationModel?> GetConversationByIdAsync(int id) => await GetExistingConversationByIdAsync(id);
+		public async Task<ConversationModel?> GetConversationByIdAsync(int conversationId) => await GetExistingConversationByIdAsync(conversationId);
 
 		/// <inheritdoc cref="IConversationService.StartConversationAsync(int)" />
 		public async Task<ConversationModel?> StartConversationAsync(int userId)
@@ -46,9 +46,9 @@ namespace TalonRAG.Domain.Services
 			var conversationId = await _conversationRepository.InsertConversationAsync(userId);
 
 			// Create initial system message, add to conversation.
-			var systemMessageRecord = 
+			var systemMessage = 
 				new MessageModel { ConversationId = conversationId, MessageType = MessageType.System, Content = SYSTEM_MESSAGE_CONTENT };
-			await _messageRepository.InsertMessageAsync(systemMessageRecord);
+			await _messageRepository.InsertMessageAsync(systemMessage);
 
 			// Retrieve conversation and corresponding message records and return started conversation object.
 			return await GetExistingConversationByIdAsync(conversationId);
@@ -59,7 +59,7 @@ namespace TalonRAG.Domain.Services
 		{
 			// Get existing conversation by ID.
 			var conversation = await GetConversationByIdAsync(conversationId);
-			if (conversation == null) { return null; }
+			if (conversation is null) { return null; }
 
 			// Retrieve similar article embeddings based on user message content.
 			var articleEmbeddings = await _articleEmbeddingService.GetSimilarEmbeddingsFromContentAsync(userMessageContent);
@@ -90,11 +90,35 @@ namespace TalonRAG.Domain.Services
 			return conversation;
 		}
 
-		private async Task<ConversationModel?> GetExistingConversationByIdAsync(int id)
+		/// <inheritdoc cref="IConversationService.GetConversationsByUserIdAsync(int)" />
+		public async Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId)
+		{
+			var conversations = await _conversationRepository.GetConversationsByUserIdAsync(userId);
+			if (conversations is null) { return null; }
+
+			var conversationIds = conversations.Select(conversation => conversation.Id).ToArray();
+
+			var messages = await _messageRepository.GetMessagesByConversationIdsAsync(conversationIds);
+			var messagesByConversationIds =
+				messages.GroupBy(message => message.ConversationId)
+					.ToDictionary(group => group.Key, group => group.ToList());
+
+			foreach(var conversation in conversations)
+			{
+				if (messagesByConversationIds.TryGetValue(conversation.Id, out var scopedMessages))
+				{
+					conversation.AddMessages(scopedMessages);
+				}
+			}
+
+			return conversations;
+		}
+
+		private async Task<ConversationModel?> GetExistingConversationByIdAsync(int conversationId)
 		{
 			var conversation =
-				await _conversationRepository.GetConversationByIdAsync(id);
-			if(conversation == null) { return null; }
+				await _conversationRepository.GetConversationByIdAsync(conversationId);
+			if (conversation is null) { return null; }
 
 			var messages = await _messageRepository.GetMessagesByConversationIdAsync(conversation.Id);
 			conversation.AddMessages(messages);

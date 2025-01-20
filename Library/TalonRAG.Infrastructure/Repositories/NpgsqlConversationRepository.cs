@@ -53,7 +53,7 @@ namespace TalonRAG.Infrastructure.Repositories
 				},
 				parameters);
 
-			return conversationEntities.FirstOrDefault().ToDomainModel();
+			return conversationEntities.FirstOrDefault()?.ToDomainModel();
 		}
 
 		/// <inheritdoc cref="IConversationRepository.GetConversationsByUserIdAsync(int)" />

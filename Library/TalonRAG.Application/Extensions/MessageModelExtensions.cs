@@ -18,7 +18,7 @@ namespace TalonRAG.Application.Extensions
         {
             return new MessageDto
             {
-                MessageType = message.MessageType,
+                MessageType = message.MessageType.ToDescription(),
                 Content = message.Content,
                 CreateDate = message.CreateDate
             };

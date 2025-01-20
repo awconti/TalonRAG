@@ -1,4 +1,4 @@
-﻿using TalonRAG.Application.DataTransferObjects;
+﻿using TalonRAG.Application.DataTransferObjects.External;
 using TalonRAG.Application.Interfaces;
 using TalonRAG.Domain.Interfaces;
 

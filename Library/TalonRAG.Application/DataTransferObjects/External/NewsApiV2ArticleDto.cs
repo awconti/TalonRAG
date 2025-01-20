@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TalonRAG.Application.DataTransferObjects
+namespace TalonRAG.Application.DataTransferObjects.External
 {
     /// <summary>
     /// DTO representing an article retrieved from <a href="https://newsapi.org">News API</a>.

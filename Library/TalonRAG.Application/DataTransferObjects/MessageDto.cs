@@ -1,6 +1,4 @@
-﻿using TalonRAG.Domain.Enums;
-
-namespace TalonRAG.Application.DataTransferObjects
+﻿namespace TalonRAG.Application.DataTransferObjects
 {
 	/// <summary>
 	/// DTO for representing a particular message within a conversation.
@@ -8,9 +6,9 @@ namespace TalonRAG.Application.DataTransferObjects
 	public class MessageDto
 	{
 		/// <summary>
-		/// <see cref="MessageType" />.
+		/// Description of <see cref="MessageType" />.
 		/// </summary>
-		public MessageType MessageType { get; set; }
+		public string MessageType { get; set; } = string.Empty;
 
 		/// <summary>
 		/// The content of the message.

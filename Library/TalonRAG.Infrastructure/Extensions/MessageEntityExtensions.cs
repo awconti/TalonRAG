@@ -19,6 +19,7 @@ namespace TalonRAG.Infrastructure.Extensions
 			return new MessageModel
 			{
 				Id = messageEntity.Id,
+				ConversationId = messageEntity.ConversationId,
 				MessageType = messageEntity.MessageType,
 				Content = messageEntity.Content,
 				CreateDate = messageEntity.CreateDate

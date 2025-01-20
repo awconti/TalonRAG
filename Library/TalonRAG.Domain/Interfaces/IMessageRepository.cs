@@ -10,10 +10,7 @@ namespace TalonRAG.Domain.Interfaces
 		/// <summary>
 		/// Persists an instance of <see cref="MessageModel" />.
 		/// </summary>
-		/// <param name="conversationId">
-		/// The unique database identifier of the conversation the message belongs to.
-		/// </param>
-		/// <param name="messageEntity">
+		/// <param name="messageModel">
 		/// An instance of <see cref="MessageModel" /> to persist.
 		/// </param>
 		Task<int> InsertMessageAsync(MessageModel messageModel);
@@ -25,5 +22,13 @@ namespace TalonRAG.Domain.Interfaces
 		/// The unique database identifier of the conversation.
 		/// </param>
 		Task<IList<MessageModel>> GetMessagesByConversationIdAsync(int conversationId);
+
+		/// <summary>
+		/// Retrieves a list collection of messages by conversation ID.
+		/// </summary>
+		/// <param name="conversationIds">
+		/// The unique database identifiers of conversations to retrieve messages for.
+		/// </param>
+		Task<IList<MessageModel>> GetMessagesByConversationIdsAsync(int[] conversationIds);
 	}
 }

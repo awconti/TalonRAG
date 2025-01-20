@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics;
+using TalonRAG.Application.Exceptions;
 using TalonRAG.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,22 @@ builder.Services.AddSwaggerGen();
 builder.RegisterConversationWebApiDependencies();
 
 var app = builder.Build();
+
+app.UseExceptionHandler(contextBuilder =>
+{
+	contextBuilder.Run(async context =>
+	{
+		var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+		context.Response.StatusCode = exception switch
+		{
+			ConversationNotFoundException
+				or UserNotFoundException
+				or UserConversationsNotFoundException => StatusCodes.Status404NotFound,
+			_ => StatusCodes.Status500InternalServerError,
+		};
+		await context.Response.WriteAsync(exception?.Message ?? string.Empty);
+	});
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
