@@ -25,13 +25,13 @@ namespace TalonRAG.Application.Services
 			return conversation is not null ? conversation.ToDto() : throw new ConversationNotFoundException(id);
 		}
 
-		/// <inheritdoc cref="IConversationApiService.AddNewConversationAsync(NewConversationRequest)" />
+		/// <inheritdoc cref="IConversationApiService.AddNewCopenonversationAsync(NewConversationRequest)" />
 		public async Task<ConversationDto> AddNewConversationAsync(NewConversationRequest request)
 		{
 			_ = await _userService.GetUserByIdAsync(request.UserId) ?? throw new UserNotFoundException(request.UserId);
 			var conversation = await _conversationService.StartConversationAsync(request.UserId);
 			conversation = await _conversationService.ContinueConversationAsync(conversation?.Id ?? -1, request.MessageContent ?? string.Empty);
-			return conversation is null ? throw new ConversationInitializationException(request.UserId) : conversation.ToDto();
+			return conversation is not null ? conversation.ToDto() : throw new ConversationInitializationException(request.UserId);
 		}
 
 		/// <inheritdoc cref="IConversationApiService.UpdateConversationAsync(int, UpdateConversationRequest)" />
