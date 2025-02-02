@@ -27,7 +27,10 @@ namespace TalonRAG.Application.Services
 				var maxArticleDate = DateTime.UtcNow.AddDays(-30);
 
 				var articles = await GetNewsApiArticlesAsync(maxArticleDate);
-				var articleDescriptions = articles.Select(article => article.Description).ToList();
+				var articleDescriptions = 
+					articles.Select(article => article.Description)
+						.Where(description => description != null)
+						.ToList();
 
 				await _embeddingService.CreateEmbeddingsForContentAsync(articleDescriptions, maxArticleDate);
 			} 
