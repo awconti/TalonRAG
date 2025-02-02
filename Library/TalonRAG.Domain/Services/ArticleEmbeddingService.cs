@@ -17,6 +17,13 @@ namespace TalonRAG.Domain.Services
 		private readonly IEmbeddingGenerationService _embeddingGenerationService = embeddingGenerationService;
 		private readonly IArticleEmbeddingRepository _repository = repository;
 
+		/// <inheritdoc cref="IArticleEmbeddingService.GetSimilarEmbeddingsFromContentAsync(string)" />
+		public async Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsFromContentAsync(string content)
+		{
+			var messageContentEmbeddings = await _embeddingGenerationService.GenerateEmbeddingsAsync([content]);
+			return await _repository.GetSimilarEmbeddingsAsync([.. messageContentEmbeddings.FirstOrDefault().ToArray()]);
+		}
+
 		/// <inheritdoc cref="IArticleEmbeddingService.CreateEmbeddingsForContentAsync(IList{string}, DateTime)" />
 		public async Task CreateEmbeddingsForContentAsync(IList<string> articleDescriptions, DateTime maxArticleDate)
 		{
@@ -37,13 +44,6 @@ namespace TalonRAG.Domain.Services
 
 			await _repository.DeleteAllEmbeddingsAsync(maxArticleDate);
 			await _repository.BulkInsertEmbeddingsAsync(articleEmbeddings);
-		}
-
-		/// <inheritdoc cref="IArticleEmbeddingService.GetSimilarEmbeddingsFromContentAsync(string)" />
-		public async Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsFromContentAsync(string content)
-		{
-			var messageContentEmbeddings = await _embeddingGenerationService.GenerateEmbeddingsAsync([ content ]);
-			return await _repository.GetSimilarEmbeddingsAsync([ ..messageContentEmbeddings.FirstOrDefault().ToArray() ]);
 		}
 	}
 }

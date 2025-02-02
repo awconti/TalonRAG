@@ -33,5 +33,12 @@ namespace TalonRAG.WebAPI.Controllers
 			var response = await _conversationApiService.UpdateConversationAsync(id, request);
 			return StatusCode(StatusCodes.Status202Accepted, response);
 		}
+
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> DeleteConversationAsync(int id)
+		{
+			await _conversationApiService.DeleteConversationAsync(id);
+			return StatusCode(StatusCodes.Status204NoContent);
+		}
 	}
 }

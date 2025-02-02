@@ -8,6 +8,17 @@ namespace TalonRAG.Domain.Interfaces
     public interface IArticleEmbeddingRepository
 	{
 		/// <summary>
+		/// Retrieves similar embeddings.
+		/// </summary>
+		/// <param name="embedding">
+		/// Float array used as as basis to retrieve similar embeddings.
+		/// </param>
+		/// <param name="limit">
+		/// Number of embeddings to retrieve.
+		/// </param>
+		Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
+
+		/// <summary>
 		/// Purges all vector embeddings.
 		/// </summary>
 		/// <param name="createDate">
@@ -31,16 +42,5 @@ namespace TalonRAG.Domain.Interfaces
 		/// List collection of <see cref="ArticleEmbeddingModel" />.
 		/// </param>
 		Task BulkInsertEmbeddingsAsync(IList<ArticleEmbeddingModel> embeddingModels);
-
-		/// <summary>
-		/// Retrieves similar embeddings.
-		/// </summary>
-		/// <param name="embedding">
-		/// Float array used as as basis to retrieve similar embeddings.
-		/// </param>
-		/// <param name="limit">
-		/// Number of embeddings to retrieve.
-		/// </param>
-		Task<IList<ArticleEmbeddingModel>> GetSimilarEmbeddingsAsync(float[] embedding, int limit = 5);
 	}
 }

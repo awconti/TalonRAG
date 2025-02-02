@@ -11,10 +11,10 @@ namespace TalonRAG.Application.Interfaces
 		/// <summary>
 		/// Retrieves conversation by ID.
 		/// </summary>
-		/// <param name="id">
+		/// <param name="conversationId">
 		/// Unique database identifier of the conversation.
 		/// </param>
-		Task<ConversationDto> GetConversationByIdAsync(int id);
+		Task<ConversationDto> GetConversationByIdAsync(int conversationId);
 
 		/// <summary>
 		/// Initiates a new conversation.
@@ -34,5 +34,13 @@ namespace TalonRAG.Application.Interfaces
 		/// <see cref="UpdateConversationRequest"/>.
 		/// </param>
 		Task<ConversationDto> UpdateConversationAsync(int conversationId, UpdateConversationRequest request);
+
+		/// <summary>
+		/// Deletes an existing conversation.
+		/// </summary>
+		/// <param name="conversationId">
+		/// Unique identifier of the conversation.
+		/// </param>
+		Task DeleteConversationAsync(int conversationId);
 	}
 }

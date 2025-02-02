@@ -16,6 +16,14 @@ namespace TalonRAG.Domain.Interfaces
 		Task<int> InsertConversationAsync(int userId);
 
 		/// <summary>
+		/// Removes a conversation by ID.
+		/// </summary>
+		/// <param name="conversationId">
+		/// The unique identifier for the conversation.
+		/// </param>
+		Task<int> DeleteConversationByIdAsync(int conversationId);
+
+		/// <summary>
 		/// Retrieves a conversation by ID.
 		/// </summary>
 		/// <param name="conversationId">

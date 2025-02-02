@@ -16,6 +16,22 @@ namespace TalonRAG.Domain.Interfaces
 		Task<ConversationModel?> GetConversationByIdAsync(int conversationId);
 
 		/// <summary>
+		/// Retrieves a conversations by user ID.
+		/// </summary>
+		/// <param name="userId">
+		/// The unique identifier of the user to retrieve conversations for.
+		/// </param>
+		Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId);
+
+		/// <summary>
+		/// Retrieves a conversations with only latest message by user ID.
+		/// </summary>
+		/// <param name="userId">
+		/// The unique identifier of the user to retrieve conversations for.
+		/// </param>
+		Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId);
+
+		/// <summary>
 		/// Creates a conversation for a specific user.
 		/// </summary>
 		/// <param name="userId">
@@ -35,19 +51,11 @@ namespace TalonRAG.Domain.Interfaces
 		Task<ConversationModel?> ContinueConversationAsync(int conversationId, string userMessageContent);
 
 		/// <summary>
-		/// Retrieves a conversations by user ID.
+		/// Removes a conversation by ID.
 		/// </summary>
-		/// <param name="userId">
-		/// The unique identifier of the user to retrieve conversations for.
+		/// <param name="conversationId">
+		/// The unique identifier of the conversation.
 		/// </param>
-		Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId);
-
-		/// <summary>
-		/// Retrieves a conversations with only latest message by user ID.
-		/// </summary>
-		/// <param name="userId">
-		/// The unique identifier of the user to retrieve conversations for.
-		/// </param>
-		Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId);
+		Task DeleteConversationByIdAsync(int conversationId);
 	}
 }

@@ -17,22 +17,6 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlMessageRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IMessageRepository
 	{
-		/// <inheritdoc cref="IMessageRepository.InsertMessageAsync(MessageModel)" />
-		public async Task<int> InsertMessageAsync(MessageModel messageModel)
-		{
-			var sql =
-				"INSERT INTO messages (conversation_id, message_type, message_content) VALUES (@ConversationId, @MessageType, @MessageContent) RETURNING id;";
-
-			var parameters = new Dictionary<string, object>
-			{
-				{ "@ConversationId", messageModel.ConversationId},
-				{ "@MessageType", (int) messageModel.MessageType },
-				{ "@MessageContent", messageModel.Content }
-			};
-
-			return await ExecuteScalarAsync<int>(sql, parameters);
-		}
-
 		/// <inheritdoc cref="IMessageRepository.GetMessagesByConversationIdAsync(int)" />
 		public async Task<IList<MessageModel>> GetMessagesByConversationIdAsync(int conversationId)
 		{
@@ -53,7 +37,7 @@ namespace TalonRAG.Infrastructure.Repositories
 				{
 					Id = reader.GetInt32(reader.GetOrdinal("id")),
 					ConversationId = reader.GetInt32(reader.GetOrdinal("conversation_id")),
-					MessageType = (MessageType) reader.GetInt32(reader.GetOrdinal("message_type")),
+					MessageType = (MessageType)reader.GetInt32(reader.GetOrdinal("message_type")),
 					Content = reader.GetString(reader.GetOrdinal("message_content")),
 					CreateDate = reader.GetDateTime(reader.GetOrdinal("create_date"))
 				},
@@ -120,6 +104,36 @@ namespace TalonRAG.Infrastructure.Repositories
 				parameters);
 
 			return messageEntities.Select(entity => entity.ToDomainModel()).ToList();
+		}
+
+		/// <inheritdoc cref="IMessageRepository.InsertMessageAsync(MessageModel)" />
+		public async Task<int> InsertMessageAsync(MessageModel messageModel)
+		{
+			var sql =
+				"INSERT INTO messages (conversation_id, message_type, message_content) VALUES (@ConversationId, @MessageType, @MessageContent) RETURNING id;";
+
+			var parameters = new Dictionary<string, object>
+			{
+				{ "@ConversationId", messageModel.ConversationId},
+				{ "@MessageType", (int) messageModel.MessageType },
+				{ "@MessageContent", messageModel.Content }
+			};
+
+			return await ExecuteScalarAsync<int>(sql, parameters);
+		}
+
+		/// <inheritdoc cref="IMessageRepository.DeleteMessagesByConversationIdAsync(int)" />
+		public async Task<int> DeleteMessagesByConversationIdAsync(int conversationId)
+		{
+			var sql =
+				"DELETE FROM messages WHERE conversation_id = @ConversationId;";
+
+			var parameters = new Dictionary<string, object>
+			{
+				{ "@ConversationId", conversationId }
+			};
+
+			return await ExecuteNonQueryAsync(sql, parameters);
 		}
 	}
 }

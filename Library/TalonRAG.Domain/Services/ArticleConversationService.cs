@@ -39,6 +39,12 @@ namespace TalonRAG.Domain.Services
 		/// <inheritdoc cref="IConversationService.GetConversationByIdAsync(int)"
 		public async Task<ConversationModel?> GetConversationByIdAsync(int conversationId) => await GetExistingConversationByIdAsync(conversationId);
 
+		/// <inheritdoc cref="IConversationService.GetConversationsByUserIdAsync(int)" />
+		public async Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId);
+
+		/// <inheritdoc cref="IConversationService.GetLastMessagesInConversationsByUserIdAsync(int)" />
+		public async Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId, true);
+
 		/// <inheritdoc cref="IConversationService.StartConversationAsync(int)" />
 		public async Task<ConversationModel?> StartConversationAsync(int userId)
 		{
@@ -90,11 +96,16 @@ namespace TalonRAG.Domain.Services
 			return conversation;
 		}
 
-		/// <inheritdoc cref="IConversationService.GetConversationsByUserIdAsync(int)" />
-		public async Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId);
+		/// <inheritdoc cref="IConversationService.DeleteConversationByIdAsync(int)" />
+		public async Task DeleteConversationByIdAsync(int conversationId)
+		{
+			// Get existing conversation by ID.
+			var conversation = await GetConversationByIdAsync(conversationId);
+			if (conversation is null) { return; }
 
-		/// <inheritdoc cref="IConversationService.GetLastMessagesInConversationsByUserIdAsync(int)" />
-		public async Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId, true);
+			await _messageRepository.DeleteMessagesByConversationIdAsync(conversationId);
+			await _conversationRepository.DeleteConversationByIdAsync(conversationId);
+		}
 
 		private async Task<ConversationModel?> GetExistingConversationByIdAsync(int conversationId)
 		{

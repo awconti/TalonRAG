@@ -1,4 +1,5 @@
-﻿using TalonRAG.Application.DataTransferObjects;
+﻿using Azure.Core;
+using TalonRAG.Application.DataTransferObjects;
 using TalonRAG.Application.DataTransferObjects.Requests;
 using TalonRAG.Application.Exceptions;
 using TalonRAG.Application.Extensions;
@@ -39,6 +40,13 @@ namespace TalonRAG.Application.Services
 		{
 			var conversation = await _conversationService.ContinueConversationAsync(conversationId, request.MessageContent ?? string.Empty);
 			return conversation is not null ? conversation.ToDto() : throw new ConversationNotFoundApiException(conversationId);
+		}
+
+		/// <inheritdoc cref="IConversationApiService.DeleteConversationAsync(int)" />
+		public async Task DeleteConversationAsync(int conversationId)
+		{
+			_ = await _conversationService.GetConversationByIdAsync(conversationId) ?? throw new ConversationNotFoundApiException(conversationId);
+			await _conversationService.DeleteConversationByIdAsync(conversationId);
 		}
 	}
 }

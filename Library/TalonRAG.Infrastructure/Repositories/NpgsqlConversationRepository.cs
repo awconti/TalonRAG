@@ -15,20 +15,6 @@ namespace TalonRAG.Infrastructure.Repositories
 	/// </param>
 	public class NpgsqlConversationRepository(IOptions<DatabaseConfigurationSettings> options) : BaseNpgsqlRepository(options), IConversationRepository
 	{
-		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(int)" />
-		public async Task<int> InsertConversationAsync(int userId)
-		{
-			var sql =
-				"INSERT INTO conversations (user_id) VALUES (@UserId) RETURNING id;";
-
-			var parameters = new Dictionary<string, object>
-			{
-				{ "@UserId", userId }
-			};
-
-			return await ExecuteScalarAsync<int>(sql, parameters);
-		}
-
 		/// <inheritdoc cref="IConversationRepository.GetConversationByIdAsync(int)" />
 		public async Task<ConversationModel?> GetConversationByIdAsync(int conversationId)
 		{
@@ -81,6 +67,34 @@ namespace TalonRAG.Infrastructure.Repositories
 				parameters);
 
 			return conversationEntities.Select(entity => entity.ToDomainModel()).ToList();
+		}
+
+		/// <inheritdoc cref="IConversationRepository.InsertConversationAsync(int)" />
+		public async Task<int> InsertConversationAsync(int userId)
+		{
+			var sql =
+				"INSERT INTO conversations (user_id) VALUES (@UserId) RETURNING id;";
+
+			var parameters = new Dictionary<string, object>
+			{
+				{ "@UserId", userId }
+			};
+
+			return await ExecuteScalarAsync<int>(sql, parameters);
+		}
+
+		/// <inheritdoc cref="IConversationRepository.DeleteConversationByIdAsync(int)" />
+		public async Task<int> DeleteConversationByIdAsync(int conversationId)
+		{
+			var sql =
+				"DELETE FROM conversations WHERE id = @ConversationId;";
+
+			var parameters = new Dictionary<string, object>
+			{
+				{ "@ConversationId", conversationId }
+			};
+
+			return await ExecuteNonQueryAsync(sql, parameters);
 		}
 	}
 }
