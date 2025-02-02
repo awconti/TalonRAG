@@ -91,28 +91,10 @@ namespace TalonRAG.Domain.Services
 		}
 
 		/// <inheritdoc cref="IConversationService.GetConversationsByUserIdAsync(int)" />
-		public async Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId)
-		{
-			var conversations = await _conversationRepository.GetConversationsByUserIdAsync(userId);
-			if (conversations is null) { return null; }
+		public async Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId);
 
-			var conversationIds = conversations.Select(conversation => conversation.Id).ToArray();
-
-			var messages = await _messageRepository.GetMessagesByConversationIdsAsync(conversationIds);
-			var messagesByConversationIds =
-				messages.GroupBy(message => message.ConversationId)
-					.ToDictionary(group => group.Key, group => group.ToList());
-
-			foreach(var conversation in conversations)
-			{
-				if (messagesByConversationIds.TryGetValue(conversation.Id, out var scopedMessages))
-				{
-					conversation.AddMessages(scopedMessages);
-				}
-			}
-
-			return conversations;
-		}
+		/// <inheritdoc cref="IConversationService.GetLastMessagesInConversationsByUserIdAsync(int)" />
+		public async Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId) => await GetExistingConversationsByUserIdAsync(userId, true);
 
 		private async Task<ConversationModel?> GetExistingConversationByIdAsync(int conversationId)
 		{
@@ -124,6 +106,33 @@ namespace TalonRAG.Domain.Services
 			conversation.AddMessages(messages);
 
 			return conversation;
+		}
+
+		private async Task<IList<ConversationModel>?> GetExistingConversationsByUserIdAsync(int userId, bool getLastMessages = false)
+		{
+			var conversations = await _conversationRepository.GetConversationsByUserIdAsync(userId);
+			if (conversations is null) { return null; }
+
+			var conversationIds = conversations.Select(conversation => conversation.Id).ToArray();
+
+			var messages =
+				getLastMessages is true
+					? await _messageRepository.GetLastMessagesByConversationIdsAsync(conversationIds)
+					: await _messageRepository.GetMessagesByConversationIdsAsync(conversationIds);
+			
+			var messagesByConversationIds =
+					messages.GroupBy(message => message.ConversationId)
+						.ToDictionary(group => group.Key, group => group.ToList());
+
+			foreach (var conversation in conversations)
+			{
+				if (messagesByConversationIds.TryGetValue(conversation.Id, out var scopedMessages))
+				{
+					conversation.AddMessages(scopedMessages);
+				}
+			}
+
+			return conversations;
 		}
 	}
 }

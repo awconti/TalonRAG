@@ -41,5 +41,13 @@ namespace TalonRAG.Domain.Interfaces
 		/// The unique identifier of the user to retrieve conversations for.
 		/// </param>
 		Task<IList<ConversationModel>?> GetConversationsByUserIdAsync(int userId);
+
+		/// <summary>
+		/// Retrieves a conversations with only latest message by user ID.
+		/// </summary>
+		/// <param name="userId">
+		/// The unique identifier of the user to retrieve conversations for.
+		/// </param>
+		Task<IList<ConversationModel>?> GetLastMessagesInConversationsByUserIdAsync(int userId);
 	}
 }

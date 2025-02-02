@@ -23,11 +23,21 @@ namespace TalonRAG.Application.Services
 		/// <inheritdoc cref="IUserApiService.GetConversationsByUserIdAsync(int)" />
 		public async Task<IList<ConversationDto>> GetConversationsByUserIdAsync(int userId)
 		{
-			var user = await _userService.GetUserByIdAsync(userId) ?? throw new UserNotFoundException(userId);
+			var user = await _userService.GetUserByIdAsync(userId) ?? throw new UserNotFoundApiException(userId);
 			var conversations = await _conversationService.GetConversationsByUserIdAsync(userId);
 			return conversations is not null
 				? conversations.Select(conversation => conversation.ToDto()).ToList() 
-				: throw new UserConversationsNotFoundException(userId);
+				: throw new UserConversationsNotFoundApiException(userId);
+		}
+
+		/// <inheritdoc cref="IUserApiService.GetLastMessagesInConversationsByUserIdAsync(int)" />
+		public async Task<IList<ConversationDto>> GetLastMessagesInConversationsByUserIdAsync(int userId)
+		{
+			var user = await _userService.GetUserByIdAsync(userId) ?? throw new UserNotFoundApiException(userId);
+			var conversations = await _conversationService.GetLastMessagesInConversationsByUserIdAsync(userId);
+			return conversations is not null
+				? conversations.Select(conversation => conversation.ToDto()).ToList()
+				: throw new UserConversationsNotFoundApiException(userId);
 		}
 	}
 }

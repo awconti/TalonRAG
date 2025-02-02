@@ -30,5 +30,13 @@ namespace TalonRAG.Domain.Interfaces
 		/// The unique database identifiers of conversations to retrieve messages for.
 		/// </param>
 		Task<IList<MessageModel>> GetMessagesByConversationIdsAsync(int[] conversationIds);
+
+		/// <summary>
+		/// Retrieves a list collection of messages by conversation ID.
+		/// </summary>
+		/// <param name="conversationIds">
+		/// The unique database identifiers of conversations to retrieve messages for.
+		/// </param>
+		Task<IList<MessageModel>> GetLastMessagesByConversationIdsAsync(int[] conversationIds);
 	}
 }

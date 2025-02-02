@@ -22,9 +22,9 @@ app.UseExceptionHandler(contextBuilder =>
 		var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
 		context.Response.StatusCode = exception switch
 		{
-			ConversationNotFoundException
-				or UserNotFoundException
-				or UserConversationsNotFoundException => StatusCodes.Status404NotFound,
+			ConversationNotFoundApiException
+				or UserNotFoundApiException
+				or UserConversationsNotFoundApiException => StatusCodes.Status404NotFound,
 			_ => StatusCodes.Status500InternalServerError,
 		};
 		await context.Response.WriteAsync(exception?.Message ?? string.Empty);
