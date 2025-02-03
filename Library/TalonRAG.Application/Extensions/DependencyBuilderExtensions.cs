@@ -7,7 +7,7 @@ using TalonRAG.Application.Services;
 using TalonRAG.Domain.Interfaces;
 using TalonRAG.Domain.Services;
 using TalonRAG.Infrastructure.ConfigurationSettings;
-using TalonRAG.Infrastructure.NewsAPI;
+using TalonRAG.Infrastructure.External;
 using TalonRAG.Infrastructure.Repositories;
 using TalonRAG.Infrastructure.SemanticKernel;
 
@@ -33,7 +33,7 @@ namespace TalonRAG.Application.Extensions
 			services.Configure<EmbeddingGenerationConfigurationSettings>(embeddingGenerationConfig);
 			services.Configure<NewsApiConfigurationSettings>(newsApiConfig);
 
-			services.AddHttpClient<IExternalArticleApiClient, NewsApiClient>((serviceProvider, client) =>
+			services.AddHttpClient<IExternalApiClient, ExternalApiClient>((serviceProvider, client) =>
 			{
 				var settings = serviceProvider.GetRequiredService<IOptions<NewsApiConfigurationSettings>>().Value;
 				client.BaseAddress = new Uri(settings.BaseUrl ?? string.Empty);

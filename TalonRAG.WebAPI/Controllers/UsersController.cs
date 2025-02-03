@@ -14,7 +14,7 @@ namespace TalonRAG.WebAPI.Controllers
 		public async Task<ActionResult<IList<ConversationDto>>> GetConversationsByUserIdAsync(int id, bool lastMessagesOnly)
 		{
 			var response =
-				lastMessagesOnly is false
+				!lastMessagesOnly
 					? await _userApiService.GetConversationsByUserIdAsync(id)
 					: await _userApiService.GetLastMessagesInConversationsByUserIdAsync(id);
 			return StatusCode(StatusCodes.Status200OK, response);

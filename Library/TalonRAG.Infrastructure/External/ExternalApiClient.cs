@@ -3,25 +3,25 @@ using Polly.Extensions.Http;
 using System.Text.Json;
 using TalonRAG.Domain.Interfaces;
 
-namespace TalonRAG.Infrastructure.NewsAPI
+namespace TalonRAG.Infrastructure.External
 {
 	/// <summary>
-	/// <a href="https://newsapi.org">News API</a> specific implementation of <see cref="IExternalArticleApiClient"/>.
+	/// Specific implementation of <see cref="IExternalApiClient"/> utilized to perform HTTP requests to APIs externally.
 	/// </summary>
 	/// <param name="httpClient">
 	/// <see cref="HttpClient" />.
 	/// </param>
-	public class NewsApiClient(HttpClient httpClient) : IExternalArticleApiClient
+	public class ExternalApiClient(HttpClient httpClient) : IExternalApiClient
 	{
 		private readonly HttpClient _httpClient = httpClient;
 
-		/// <inheritdoc cref="IExternalArticleApiClient.GetArticlesAsync(string)" />
-		public async Task<T> GetArticlesAsync<T>(string endpoint) where T : class, new()
+		/// <inheritdoc cref="IExternalApiClient.GetAsync(string)" />
+		public async Task<T> GetAsync<T>(string endpoint, int retryCount = 5) where T : class, new()
 		{
 			var retryPolicy = HttpPolicyExtensions
 				.HandleTransientHttpError()
 				.OrResult(r => !r.IsSuccessStatusCode)
-				.WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+				.WaitAndRetryAsync(retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
 
 			var response = await retryPolicy.ExecuteAsync(async () =>
 			{

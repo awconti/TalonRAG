@@ -11,13 +11,13 @@ namespace TalonRAG.Application.Services
     /// <see cref="IArticleEmbeddingService" />.
     /// </param>
 	/// <param name="newsApiClient">
-	/// <see cref="IExternalArticleApiClient" />.
+	/// <see cref="IExternalApiClient" />.
 	/// </param>
     public class EtlConsoleAppService(
-		IArticleEmbeddingService embeddingService, IExternalArticleApiClient newsApiClient) : IConsoleAppService
+		IArticleEmbeddingService embeddingService, IExternalApiClient newsApiClient) : IConsoleAppService
 	{
 		private readonly IArticleEmbeddingService _embeddingService = embeddingService;
-		private readonly IExternalArticleApiClient _newsApiClient = newsApiClient;
+		private readonly IExternalApiClient _newsApiClient = newsApiClient;
 
 		/// <inheritdoc cref="IConsoleAppService.RunAsync" />
 		public async Task RunAsync()
@@ -43,7 +43,7 @@ namespace TalonRAG.Application.Services
 		private async Task<IList<NewsApiV2ArticleDto>> GetNewsApiArticlesAsync(DateTime maxArticleDate)
 		{
 			var response = 
-				await _newsApiClient.GetArticlesAsync<NewsApiV2Response>($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
+				await _newsApiClient.GetAsync<NewsApiV2Response>($"everything?qInTitle=philadelphia eagles&sortBy=publishedAt&from={maxArticleDate:yyyy-MM-dd}");
 
 			return response.Articles ?? [];
 		}
